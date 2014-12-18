@@ -7,10 +7,12 @@
 </div>
 
 <div class="control-group">
+
 {{ form_label(form.marca,"Marca", { 'label_attr': {'class': 'control-label'} }) }}
 <div class="controls">
- {{ form_widget(form.marca, { 'attr': {'class': 'input-xlarge'} }) }}
+ {{ form_widget(form.marca, { 'attr': {'class': 'input-xlarge', 'data-url':  path ('modelo_marca')} }) }}
  <div id='backend_adminbundle_articulo_marca_errorloc' class="help-inline error" >{{ form_errors(form.marca) }}</div>
+  
 </div>
 </div>
 

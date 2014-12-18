@@ -49,7 +49,7 @@ class MarcaSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $marca = ($data->modelo) ? $data->getModelo()->getMarca() : null ;
+        $marca = ($data->getModelo()) ? $data->getModelo()->getMarca() : null ;
         $this->addMarcaForm($form, $marca);
     }
  

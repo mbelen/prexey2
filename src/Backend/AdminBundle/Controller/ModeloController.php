@@ -3,6 +3,7 @@
 namespace Backend\AdminBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Backend\AdminBundle\Entity\Modelo;
@@ -265,6 +266,27 @@ class ModeloController extends Controller
             ->add('id', 'hidden')
             ->getForm()
         ;
+    }
+    
+    
+    public function getModelosByMarcaAction(Request $request)
+    {
+     $marca_id=$request->request->get("marca");
+     $modelos = $this->getDoctrine()->getRepository('BackendAdminBundle:Modelo')->findBy(array("marca"=>$marca_id));
+     
+      $resultado=array();
+     foreach($modelos as $v){
+          $r=array();
+          $r["id"]=$v->getId();
+          $r["name"]=$v->getName();
+          $resultado[] = $r;
+     
+     }
+     $response = new Response(json_encode($resultado));
+      
+      $response->headers->set('Content-Type', 'application/json');
+
+      return $response;
     }
     
      public function exportarAction(Request $request)

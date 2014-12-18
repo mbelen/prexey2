@@ -27,7 +27,7 @@ class ModeloSubscriber implements EventSubscriberInterface
     }
  
     private function addModeloForm($form, $marca)
-    {
+    {    
         $form->add($this->factory->createNamed('modelo','entity', null, array(
             'class'         => 'BackendAdminBundle:Modelo',
             'empty_value'   => 'Seleccione Modelo',
@@ -41,6 +41,7 @@ class ModeloSubscriber implements EventSubscriberInterface
                 if ($marca instanceof Marca) {
                     $qb->where('modelo.marca = :marca_id')
                     ->setParameter('marca_id', $marca);
+                
                 } elseif (is_numeric($marca)) {
                     $qb->where('marca.id = :marca_id')
                     ->setParameter('marca_id', $marca);
@@ -58,13 +59,15 @@ class ModeloSubscriber implements EventSubscriberInterface
     public function preSetData(FormEvent $event)
     {
         $data = $event->getData();
+      
         $form = $event->getForm();
  
         if (null === $data) {
             return;
         }
  
-        $marca = ($data->modelo) ? $data->modelo->getMarca() : null ;
+        $marca = ($data->getModelo()) ? $data->getModelo()->getMarca() : null ;
+      
         $this->addModeloForm($form, $marca);
     }
  

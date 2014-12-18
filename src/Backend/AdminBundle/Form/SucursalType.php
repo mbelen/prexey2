@@ -5,6 +5,8 @@ namespace Backend\AdminBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Backend\AdminBundle\Form\EventListener\PaisSubscriber;
+use Backend\AdminBundle\Form\EventListener\ProvinciaSubscriber;
 
 class SucursalType extends AbstractType
 {
@@ -26,6 +28,12 @@ class SucursalType extends AbstractType
             ->add('email')
             
         ;
+        
+       $paisSubscriber = new PaisSubscriber($builder->getFormFactory());
+        $builder->addEventSubscriber($paisSubscriber);
+        
+        $provinciaSubscriber = new ProvinciaSubscriber($builder->getFormFactory());
+        $builder->addEventSubscriber($provinciaSubscriber);
     }
     
     /**

@@ -31,6 +31,16 @@ class Provincia
 
     protected $zonas;    
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Pais", inversedBy="provincias")
+     * @ORM\JoinColumn(name="pais_id", referencedColumnName="id")
+     */
+
+    protected $pais;   
+
+
+    
+
      /**
     
     /**
@@ -38,7 +48,8 @@ class Provincia
      */
     public function __construct()
     {
-        $this->zonas = new ArrayCollection();
+       $this->zonas = new ArrayCollection();
+       
              
     }
     
@@ -113,4 +124,29 @@ class Provincia
     {
         return $this->zonas;
     }
+
+    /**
+     * Set pais
+     *
+     * @param \Backend\AdminBundle\Entity\Pais $pais
+     * @return Provincia
+     */
+    public function setPais(\Backend\AdminBundle\Entity\Pais $pais = null)
+    {
+        $this->pais = $pais;
+    
+        return $this;
+    }
+
+    /**
+     * Get pais
+     *
+     * @return \Backend\AdminBundle\Entity\Pais 
+     */
+    public function getPais()
+    {
+        return $this->pais;
+    }
+
+    
 }

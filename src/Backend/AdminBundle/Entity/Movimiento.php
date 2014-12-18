@@ -24,7 +24,7 @@ class Movimiento
      * @ORM\Column(name="documento", type="string", length=100)
      */
      
-    public $documento; 
+    protected $documento; 
     
     /**
      * @ORM\Column(name="created_at", type="datetime")
@@ -55,13 +55,9 @@ class Movimiento
 	/**
      * @ORM\Column(name="observaciones", type="text", nullable=true)
      */
+     private $observaciones;
+   
     
-    public $articulos;
-    
-    /**
-     * @ORM\ManyToMany(targetEntity="Movimiento", mappedBy="articulos")
-     */
-    private $observaciones;
     
     /**
      * Constructor
@@ -70,7 +66,8 @@ class Movimiento
     public function __construct()
     {
          $this->isDelete=false;
-         $this->createdAt = new \DateTime('now');   
+         $this->createdAt = new \DateTime('now'); 
+        
     }
      
 
@@ -337,29 +334,7 @@ class Movimiento
         return $this->depositoOrigen;
     }
 
-    /**
-     * Set articulos
-     *
-     * @param string $articulos
-     * @return Movimiento
-     */
-    public function setArticulos($articulos)
-    {
-        $this->articulos = $articulos;
-    
-        return $this;
-    }
-
-    /**
-     * Get articulos
-     *
-     * @return string 
-     */
-    public function getArticulos()
-    {
-        return $this->articulos;
-    }
-
+   
     /**
      * Add observaciones
      *
