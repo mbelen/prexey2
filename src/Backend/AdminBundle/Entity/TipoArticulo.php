@@ -44,6 +44,10 @@ class TipoArticulo
      **/
     private $parent; 
 
+    /**
+     * @ORM\OneToMany(targetEntity="Articulo", mappedBy="tipo")
+     **/
+
     protected $articulos;    
 
      /**

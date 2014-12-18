@@ -94,6 +94,10 @@ class Sucursal
      * @ORM\Column(name="is_delete", type="boolean" )
      */
     private $isDelete;
+    
+   
+    
+    
     /**
      * Constructor
      */
@@ -434,4 +438,6 @@ class Sucursal
     {
         return $this->isDelete;
     }
+
+   
 }

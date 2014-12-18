@@ -14,12 +14,12 @@ class Marca
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    public $id;
+    protected $id;
 
     /**
      * @ORM\Column(name="name", type="string", length=100)
      */
-    public $name;
+    protected $name;
     
         /**
      * @ORM\Column(name="is_delete", type="boolean" )
@@ -29,19 +29,23 @@ class Marca
     /**
      * @ORM\OneToMany(targetEntity="Modelo", mappedBy="marca")
      */
-    public $modelos;
+    protected $modelos;
     
     /**
      * @ORM\OneToMany(targetEntity="Articulo", mappedBy="marca")
      */
-    public $articulos;
+    protected $articulos;
       
     
+     
+     
     
     public function __construct()
     {
         $this->isDelete=false;
         $this->modelos =  new ArrayCollection();
+        $this->articulos = new ArrayCollection();
+       
     }
  
      public function __toString()
@@ -169,5 +173,38 @@ class Marca
     public function getArticulos()
     {
         return $this->articulos;
+    }
+
+    /**
+     * Add sucursals
+     *
+     * @param \Backend\AdminBundle\Entity\Sucursal $sucursals
+     * @return Marca
+     */
+    public function addSucursal(\Backend\AdminBundle\Entity\Sucursal $sucursals)
+    {
+        $this->sucursals[] = $sucursals;
+    
+        return $this;
+    }
+
+    /**
+     * Remove sucursals
+     *
+     * @param \Backend\AdminBundle\Entity\Sucursal $sucursals
+     */
+    public function removeSucursal(\Backend\AdminBundle\Entity\Sucursal $sucursals)
+    {
+        $this->sucursals->removeElement($sucursals);
+    }
+
+    /**
+     * Get sucursals
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getSucursals()
+    {
+        return $this->sucursals;
     }
 }

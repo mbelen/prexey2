@@ -71,7 +71,7 @@ class Articulo
      * @ORM\JoinColumn(name="estado_id", referencedColumnName="id")
      */    
     
-    public $estado;
+    protected $estado;
        
      /**
      * @ORM\Column(name="observacion", type="text", nullable=true)
@@ -83,27 +83,16 @@ class Articulo
      * @ORM\ManyToOne(targetEntity="Marca", inversedBy="articulos")
      * @ORM\JoinColumn(name="marca_id", referencedColumnName="id")
      */    
-    public $marca;
+    protected $marca;
            
     /**
      * @ORM\ManyToOne(targetEntity="Modelo", inversedBy="articulos")
      * @ORM\JoinColumn(name="modelo_id", referencedColumnName="id")
      */ 
       
-    public $modelo;
+    protected $modelo;
 	
-	/**
-	 * @ORM\ManyToMany(targetEntity="Modelo", inversedBy="compatibilidades")
-     * @ORM\JoinTable(name="modelo_compatibilidad")
-	 */	
 	
-	public $movimientos;
-	
-	 /**
-	 * @ORM\ManyToMany(targetEntity="Movimiento", inversedBy="movimientos")
-     * @ORM\JoinTable(name="articulo_movimiento")
-	 */	
-
 	
 	
 		         
@@ -115,7 +104,7 @@ class Articulo
          $this->isDelete=false;
          $this->isValido=true;
          $this->createdAt = new \DateTime('now');
-         //$this->modelos = new ArrayCollection();   
+         
     }
     
   
@@ -440,36 +429,5 @@ class Articulo
         return $this->estado;
     }
 
-    /**
-     * Add movimientos
-     *
-     * @param \Backend\AdminBundle\Entity\Modelo $movimientos
-     * @return Articulo
-     */
-    public function addMovimiento(\Backend\AdminBundle\Entity\Modelo $movimientos)
-    {
-        $this->movimientos[] = $movimientos;
-    
-        return $this;
-    }
-
-    /**
-     * Remove movimientos
-     *
-     * @param \Backend\AdminBundle\Entity\Modelo $movimientos
-     */
-    public function removeMovimiento(\Backend\AdminBundle\Entity\Modelo $movimientos)
-    {
-        $this->movimientos->removeElement($movimientos);
-    }
-
-    /**
-     * Get movimientos
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getMovimientos()
-    {
-        return $this->movimientos;
-    }
+   
 }

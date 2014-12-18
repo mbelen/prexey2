@@ -24,6 +24,12 @@ modelo_delete:
     pattern:  /{id}/delete
     defaults: { _controller: "BackendAdminBundle:Modelo:delete" }
     requirements: { _method: post|delete }
+    
+modelo_marca:
+    pattern:  /getModelosByMarca
+    defaults: { _controller: "BackendAdminBundle:Modelo:getModelosByMarca" }
+
+    
 modelo:
     pattern:  /{search}
     defaults: { _controller: "BackendAdminBundle:Modelo:index" , search: ''}

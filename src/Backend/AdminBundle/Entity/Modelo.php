@@ -14,20 +14,20 @@ class Modelo
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    public $id;
+    protected $id;
 
     /**
      * @ORM\Column(name="name", type="string", length=100)
      */
-    public $name;
+    protected $name;
     /**
      * @ORM\Column(name="nameManufacture", type="string", length=100)
      */
-    public $nameManufacture;
+    protected $nameManufacture;
     /**
      * @ORM\Column(name="variante", type="string", length=100, nullable=true)
      */
-    public $variante;
+    protected $variante;
     
         /**
      * @ORM\Column(name="is_delete", type="boolean" )
@@ -38,19 +38,19 @@ class Modelo
      * @ORM\ManyToOne(targetEntity="Marca", inversedBy="modelos")
      * @ORM\JoinColumn(name="marca_id", referencedColumnName="id")
      */    
-    public $marca;
+    protected $marca;
 
-	/**
-     * @ORM\ManyToOne(targetEntity="Articulo", inversedBy="modelo")
-     * 
+	 /**
+     * @ORM\OneToMany(targetEntity="Articulo", mappedBy="modelo")
      **/     
-    private $articulos;
+    protected $articulos;
 
-	    
+	 
    public function __construct()
     {
         $this->isDelete=false;
-		$this->articulos = new ArrayCollection();
+	     	$this->articulos = new ArrayCollection();
+      
     }
     
       public function __toString()
@@ -228,5 +228,38 @@ class Modelo
         $this->articulos = $articulos;
     
         return $this;
+    }
+
+    /**
+     * Add sucursals
+     *
+     * @param \Backend\AdminBundle\Entity\Sucursal $sucursals
+     * @return Modelo
+     */
+    public function addSucursal(\Backend\AdminBundle\Entity\Sucursal $sucursals)
+    {
+        $this->sucursals[] = $sucursals;
+    
+        return $this;
+    }
+
+    /**
+     * Remove sucursals
+     *
+     * @param \Backend\AdminBundle\Entity\Sucursal $sucursals
+     */
+    public function removeSucursal(\Backend\AdminBundle\Entity\Sucursal $sucursals)
+    {
+        $this->sucursals->removeElement($sucursals);
+    }
+
+    /**
+     * Get sucursals
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getSucursals()
+    {
+        return $this->sucursals;
     }
 }
