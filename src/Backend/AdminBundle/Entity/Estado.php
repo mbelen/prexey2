@@ -23,7 +23,9 @@ class Estado
     /**
      * @ORM\Column(name="name", type="string", length=100)
      */
-    protected $name;    
+
+    private $name;    
+
          
      /**
      * @ORM\Column(name="is_delete", type="boolean" )
@@ -33,6 +35,7 @@ class Estado
     /**
      * @ORM\OneToMany(targetEntity="Articulo", mappedBy="estado")
      */
+
     protected $articulos;
 
     /**
@@ -42,7 +45,7 @@ class Estado
     {
         $this->isDelete=false;
         $this->createdAt = new \DateTime('now');
-        $this->articulos = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->articulos = new ArrayCollection();
     }
     
     public function __toString()

@@ -14,11 +14,14 @@ class Modelo
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="AUTO")
      */
+
     protected $id;
+
 
     /**
      * @ORM\Column(name="name", type="string", length=100)
      */
+
     protected $name;
     /**
      * @ORM\Column(name="nameManufacture", type="string", length=100)
@@ -28,16 +31,19 @@ class Modelo
      * @ORM\Column(name="variante", type="string", length=100, nullable=true)
      */
     protected $variante;
+
     
-        /**
+    /**
      * @ORM\Column(name="is_delete", type="boolean" )
      */
+    
     private $isDelete;
 
     /**
      * @ORM\ManyToOne(targetEntity="Marca", inversedBy="modelos")
      * @ORM\JoinColumn(name="marca_id", referencedColumnName="id")
      */    
+
     protected $marca;
 
 	 /**
@@ -45,11 +51,20 @@ class Modelo
      **/     
     protected $articulos;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Ingreso", mappedBy="modelo")
+     * 
+     **/     
+    
+    private $ingresos;
+
+
 	 
    public function __construct()
     {
         $this->isDelete=false;
 	     	$this->articulos = new ArrayCollection();
+        $this->ingresos = new ArrayCollection();
       
     }
     
@@ -184,6 +199,10 @@ class Modelo
         return $this->marca;
     }
 
+   
+
+ 
+
     /**
      * Add articulos
      *
@@ -218,48 +237,35 @@ class Modelo
     }
 
     /**
-     * Set articulos
+     * Add ingresos
      *
-     * @param \Backend\AdminBundle\Entity\Articulo $articulos
+     * @param \Backend\AdminBundle\Entity\Ingreso $ingresos
      * @return Modelo
      */
-    public function setArticulos(\Backend\AdminBundle\Entity\Articulo $articulos = null)
+    public function addIngreso(\Backend\AdminBundle\Entity\Ingreso $ingresos)
     {
-        $this->articulos = $articulos;
+        $this->ingresos[] = $ingresos;
     
         return $this;
     }
 
     /**
-     * Add sucursals
+     * Remove ingresos
      *
-     * @param \Backend\AdminBundle\Entity\Sucursal $sucursals
-     * @return Modelo
+     * @param \Backend\AdminBundle\Entity\Ingreso $ingresos
      */
-    public function addSucursal(\Backend\AdminBundle\Entity\Sucursal $sucursals)
+    public function removeIngreso(\Backend\AdminBundle\Entity\Ingreso $ingresos)
     {
-        $this->sucursals[] = $sucursals;
-    
-        return $this;
+        $this->ingresos->removeElement($ingresos);
     }
 
     /**
-     * Remove sucursals
-     *
-     * @param \Backend\AdminBundle\Entity\Sucursal $sucursals
-     */
-    public function removeSucursal(\Backend\AdminBundle\Entity\Sucursal $sucursals)
-    {
-        $this->sucursals->removeElement($sucursals);
-    }
-
-    /**
-     * Get sucursals
+     * Get ingresos
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getSucursals()
+    public function getIngresos()
     {
-        return $this->sucursals;
+        return $this->ingresos;
     }
 }

@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Backend\AdminBundle\Entity\OrdenIngreso;
+use Backend\AdminBundle\Entity\Ingreso;
 use Backend\AdminBundle\Form\OrdenIngresoType;
 
 /**
@@ -117,7 +118,14 @@ class OrdenIngresoController extends Controller
     public function newAction()
     {
        if ( $this->get('security.context')->isGranted('ROLE_ADDARTICULO')) {
+		   
         $entity = new OrdenIngreso();
+        
+        $ingreso1 = new Ingreso();
+        $ingreso1->setCantidad(5);
+        $entity->getIngresos()->add($ingreso1);      
+        
+        
         $form   = $this->createForm(new OrdenIngresoType(), $entity);
 
         return $this->render('BackendAdminBundle:OrdenIngreso:new.html.twig', array(

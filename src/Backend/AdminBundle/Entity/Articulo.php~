@@ -34,6 +34,7 @@ class Articulo
      * @ORM\Column(name="is_disponible", type="boolean" )
      */
     private $isDisponible;
+    
    /**
      * @ORM\ManyToOne(targetEntity="TipoArticulo", inversedBy="articulos")
      * @ORM\JoinColumn(name="tipo_id", referencedColumnName="id")
@@ -56,8 +57,7 @@ class Articulo
     /**
      * @ORM\Column(name="is_gtia", type="boolean" )
      */ 
-    
-         
+            
     private $garantia;
     
     /**
@@ -71,7 +71,7 @@ class Articulo
      * @ORM\JoinColumn(name="estado_id", referencedColumnName="id")
      */    
     
-    public $estado;
+    protected $estado;
        
      /**
      * @ORM\Column(name="observacion", type="text", nullable=true)
@@ -83,7 +83,8 @@ class Articulo
      * @ORM\ManyToOne(targetEntity="Marca", inversedBy="articulos")
      * @ORM\JoinColumn(name="marca_id", referencedColumnName="id")
      */    
-    public $marca;
+    
+    protected $marca;
            
     /**
      * @ORM\ManyToOne(targetEntity="Modelo", inversedBy="articulos")
@@ -93,29 +94,23 @@ class Articulo
     public $modelo;
 	
 	/**
-	 * @ORM\ManyToMany(targetEntity="Modelo", inversedBy="compatibilidades")
-     * @ORM\JoinTable(name="modelo_compatibilidad")
-	 */	
-	
-	public $movimientos;
-	
-	 /**
-	 * @ORM\ManyToMany(targetEntity="Movimiento", inversedBy="movimientos")
+	 * @ORM\ManyToMany(targetEntity="Movimiento", inversedBy="articulos")
      * @ORM\JoinTable(name="articulo_movimiento")
 	 */	
+		
+	protected $movimientos;
 
-	
-	
 		         
     /**
      * Constructor
      */
+
     public function __construct()
     {
          $this->isDelete=false;
          $this->isValido=true;
          $this->createdAt = new \DateTime('now');
-         //$this->modelos = new ArrayCollection();   
+         $this->movimientos = new ArrayCollection();   
     }
     
   
@@ -438,5 +433,38 @@ class Articulo
     public function getEstado()
     {
         return $this->estado;
+    }
+
+    /**
+     * Add movimientos
+     *
+     * @param \Backend\AdminBundle\Entity\Modelo $movimientos
+     * @return Articulo
+     */
+    public function addMovimiento(\Backend\AdminBundle\Entity\Modelo $movimientos)
+    {
+        $this->movimientos[] = $movimientos;
+    
+        return $this;
+    }
+
+    /**
+     * Remove movimientos
+     *
+     * @param \Backend\AdminBundle\Entity\Modelo $movimientos
+     */
+    public function removeMovimiento(\Backend\AdminBundle\Entity\Modelo $movimientos)
+    {
+        $this->movimientos->removeElement($movimientos);
+    }
+
+    /**
+     * Get movimientos
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getMovimientos()
+    {
+        return $this->movimientos;
     }
 }

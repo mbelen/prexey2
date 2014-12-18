@@ -14,37 +14,52 @@ class Modelo
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    public $id;
+    private $id;
 
     /**
      * @ORM\Column(name="name", type="string", length=100)
      */
-    public $name;
+    
+    private $name;
+    
     /**
      * @ORM\Column(name="nameManufacture", type="string", length=100)
      */
-    public $nameManufacture;
+    
+    private $nameManufacture;
+    
     /**
      * @ORM\Column(name="variante", type="string", length=100, nullable=true)
      */
-    public $variante;
     
-        /**
+    private $variante;
+    
+    /**
      * @ORM\Column(name="is_delete", type="boolean" )
      */
+    
     private $isDelete;
 
     /**
      * @ORM\ManyToOne(targetEntity="Marca", inversedBy="modelos")
      * @ORM\JoinColumn(name="marca_id", referencedColumnName="id")
      */    
-    public $marca;
+    
+    protected $marca;
 
 	/**
-     * @ORM\ManyToOne(targetEntity="Articulo", inversedBy="modelo")
+     * @ORM\OneToMany(targetEntity="Articulo", mappedBy="modelo")
      * 
      **/     
+    
     private $articulos;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Ingreso", mappedBy="modelo")
+     * 
+     **/     
+    
+    private $ingresos;
 
 	    
    public function __construct()
@@ -228,5 +243,38 @@ class Modelo
         $this->articulos = $articulos;
     
         return $this;
+    }
+
+    /**
+     * Add ingresos
+     *
+     * @param \Backend\AdminBundle\Entity\Ingreso $ingresos
+     * @return Modelo
+     */
+    public function addIngreso(\Backend\AdminBundle\Entity\Ingreso $ingresos)
+    {
+        $this->ingresos[] = $ingresos;
+    
+        return $this;
+    }
+
+    /**
+     * Remove ingresos
+     *
+     * @param \Backend\AdminBundle\Entity\Ingreso $ingresos
+     */
+    public function removeIngreso(\Backend\AdminBundle\Entity\Ingreso $ingresos)
+    {
+        $this->ingresos->removeElement($ingresos);
+    }
+
+    /**
+     * Get ingresos
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getIngresos()
+    {
+        return $this->ingresos;
     }
 }

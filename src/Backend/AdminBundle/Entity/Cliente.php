@@ -14,31 +14,33 @@ class Cliente
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    public $id;
+    private $id;
 
     /**
      * @ORM\Column(name="name", type="string", length=100)
      */
-    public $name;
+    private $name;
 
     /**
      * @ORM\Column(name="cuit", type="string", length=100, nullable=true)
      */
-    public $cuit;
+    private $cuit;
     
     /**
      * @ORM\Column(name="dni", type="string", length=100, nullable=true)
      */
-    public $dni;
+    private $dni;
     
     /**
      * @ORM\Column(name="codigo", type="string", length=100)
      */
-    public $codigo;
+     
+    private $codigo;
 
     /**
      * @ORM\Column(name="direccion", type="text", nullable=true)
      */
+     
     private $direccion;
     /**
      * @ORM\Column(name="observacion", type="text", nullable=true)
@@ -57,9 +59,9 @@ class Cliente
     /**
      * @ORM\Column(name="is_delete", type="boolean" )
      */
+    
     private $isDelete;
-    
-    
+        
      /**
      * @ORM\Column(name="is_active", type="boolean" )
      */
@@ -73,6 +75,12 @@ class Cliente
      * @ORM\Column(name="modified_at", type="datetime", nullable=true)
      */
     private $modifiedAt; 
+    
+    /**
+     * @ORM\OneToMany(targetEntity="OrdenIngreso", mappedBy="cliente")
+     */
+    protected $ordenesIngreso;  
+    
 
     /**
      * Constructor
@@ -389,5 +397,38 @@ class Cliente
     public function getModifiedAt()
     {
         return $this->modifiedAt;
+    }
+
+    /**
+     * Add ordenesIngreso
+     *
+     * @param \Backend\AdminBundle\Entity\OrdenIngreso $ordenesIngreso
+     * @return Cliente
+     */
+    public function addOrdenesIngreso(\Backend\AdminBundle\Entity\OrdenIngreso $ordenesIngreso)
+    {
+        $this->ordenesIngreso[] = $ordenesIngreso;
+    
+        return $this;
+    }
+
+    /**
+     * Remove ordenesIngreso
+     *
+     * @param \Backend\AdminBundle\Entity\OrdenIngreso $ordenesIngreso
+     */
+    public function removeOrdenesIngreso(\Backend\AdminBundle\Entity\OrdenIngreso $ordenesIngreso)
+    {
+        $this->ordenesIngreso->removeElement($ordenesIngreso);
+    }
+
+    /**
+     * Get ordenesIngreso
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getOrdenesIngreso()
+    {
+        return $this->ordenesIngreso;
     }
 }

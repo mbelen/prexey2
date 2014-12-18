@@ -14,12 +14,16 @@ class Marca
      * @ORM\Id()
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    protected $id;
+
+    private $id;
+
 
     /**
      * @ORM\Column(name="name", type="string", length=100)
      */
-    protected $name;
+
+    private $name;
+
     
         /**
      * @ORM\Column(name="is_delete", type="boolean" )
@@ -35,6 +39,13 @@ class Marca
      * @ORM\OneToMany(targetEntity="Articulo", mappedBy="marca")
      */
     protected $articulos;
+
+    
+    /**
+     * @ORM\OneToMany(targetEntity="Ingreso", mappedBy="marca")
+     */
+    protected $ingresos;
+
       
     
      
@@ -45,13 +56,21 @@ class Marca
         $this->isDelete=false;
         $this->modelos =  new ArrayCollection();
         $this->articulos = new ArrayCollection();
-       
+        $this->ingresos = new ArrayCollection();
     }
  
      public function __toString()
     {
       return mb_convert_case($this->name, MB_CASE_TITLE,"UTF-8");
     } 
+
+  
+
+    
+
+    
+
+   
 
     /**
      * Get id
@@ -176,35 +195,35 @@ class Marca
     }
 
     /**
-     * Add sucursals
+     * Add ingresos
      *
-     * @param \Backend\AdminBundle\Entity\Sucursal $sucursals
+     * @param \Backend\AdminBundle\Entity\Ingreso $ingresos
      * @return Marca
      */
-    public function addSucursal(\Backend\AdminBundle\Entity\Sucursal $sucursals)
+    public function addIngreso(\Backend\AdminBundle\Entity\Ingreso $ingresos)
     {
-        $this->sucursals[] = $sucursals;
+        $this->ingresos[] = $ingresos;
     
         return $this;
     }
 
     /**
-     * Remove sucursals
+     * Remove ingresos
      *
-     * @param \Backend\AdminBundle\Entity\Sucursal $sucursals
+     * @param \Backend\AdminBundle\Entity\Ingreso $ingresos
      */
-    public function removeSucursal(\Backend\AdminBundle\Entity\Sucursal $sucursals)
+    public function removeIngreso(\Backend\AdminBundle\Entity\Ingreso $ingresos)
     {
-        $this->sucursals->removeElement($sucursals);
+        $this->ingresos->removeElement($ingresos);
     }
 
     /**
-     * Get sucursals
+     * Get ingresos
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getSucursals()
+    public function getIngresos()
     {
-        return $this->sucursals;
+        return $this->ingresos;
     }
 }

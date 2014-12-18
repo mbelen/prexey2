@@ -23,35 +23,46 @@ class TipoArticulo
     /**
      * @ORM\Column(name="name", type="string", length=100)
      */
+     
     private $name;
            
      /**
      * @ORM\Column(name="is_delete", type="boolean" )
      */
+     
     private $isDelete;
-    /**
-     * @ORM\OneToMany(targetEntity="Articulo", mappedBy="tipo")
+    
+   
+     
+     /**
+     * @ORM\OneToMany(targetEntity="Ingreso", mappedBy="tipo")
      */
+     
+     protected $ingresos;
+     
      
     /**
      * @ORM\OneToMany(targetEntity="TipoArticulo", mappedBy="parent")
      **/
+
     private $children;
 
     /**
      * @ORM\ManyToOne(targetEntity="TipoArticulo", inversedBy="children")
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
      **/
+      
     private $parent; 
-
     /**
      * @ORM\OneToMany(targetEntity="Articulo", mappedBy="tipo")
      **/
 
     protected $articulos;    
 
-     /**
-    
+        
+
+
+   
     /**
      * Constructor
      */
@@ -60,6 +71,7 @@ class TipoArticulo
          $this->isDelete=false;
          $this->isValido=true;
          $this->articulos = new ArrayCollection();
+         $this->ingresos = new ArrayCollection();
          $this->children = new  ArrayCollection();
              
     }
@@ -238,4 +250,37 @@ class TipoArticulo
 	{
 		return $this->name;
 	}
+
+    /**
+     * Add ingresos
+     *
+     * @param \Backend\AdminBundle\Entity\Ingreso $ingresos
+     * @return TipoArticulo
+     */
+    public function addIngreso(\Backend\AdminBundle\Entity\Ingreso $ingresos)
+    {
+        $this->ingresos[] = $ingresos;
+    
+        return $this;
+    }
+
+    /**
+     * Remove ingresos
+     *
+     * @param \Backend\AdminBundle\Entity\Ingreso $ingresos
+     */
+    public function removeIngreso(\Backend\AdminBundle\Entity\Ingreso $ingresos)
+    {
+        $this->ingresos->removeElement($ingresos);
+    }
+
+    /**
+     * Get ingresos
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getIngresos()
+    {
+        return $this->ingresos;
+    }
 }

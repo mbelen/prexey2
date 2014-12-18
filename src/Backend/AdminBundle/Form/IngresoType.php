@@ -6,6 +6,9 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\ORM\EntityRepository;
+use Backend\AdminBundle\Form\EventListener\MarcaSubscriber;
+use Backend\AdminBundle\Form\EventListener\ModeloSubscriber;
+
 
 class IngresoType extends AbstractType
 {
@@ -26,7 +29,7 @@ class IngresoType extends AbstractType
                          ->setParameter('null',false)                        
                          ->orderBy('u.name', 'ASC');
                       
-            }))
+            }));
             $marcaSubscriber = new MarcaSubscriber($builder->getFormFactory());
 			$builder->addEventSubscriber($marcaSubscriber);
         

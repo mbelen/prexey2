@@ -24,7 +24,7 @@ class OrdenIngreso
      * @ORM\Column(name="documento", type="string", length=100)
      */
      
-    public $documento; 
+    private $documento; 
     
     /**
      * @ORM\Column(name="created_at", type="datetime")
@@ -39,7 +39,7 @@ class OrdenIngreso
     private $isDelete;
    
    /**
-     * @ORM\ManyToOne(targetEntity="TipoOrdenIngreso", inversedBy="ordenesingreso")
+     * @ORM\ManyToOne(targetEntity="TipoOrdenIngreso", inversedBy="ordenesIngreso")
      * @ORM\JoinColumn(name="tipo_id", referencedColumnName="id")
     */
 
@@ -60,19 +60,13 @@ class OrdenIngreso
     protected $operador;     
 
 	/**
-     * @ORM\OneToMany(targetEntity="Producto", mappedBy="orden_ingreso")
-     */
-
-    protected $productos;  
-
-	/**
      * @ORM\Column(name="observaciones", type="text", nullable=true)
      */
     
     private $observaciones;
-    
+          
     /**
-     * @ORM\OneToMany(targetEntity="Ingreso", mappedBy="orden_ingreso")
+     * @ORM\OneToMany(targetEntity="Ingreso", mappedBy="orden")
      */
 
     protected $ingresos; 
@@ -274,38 +268,7 @@ class OrdenIngreso
         return $this->documento;
     }
 
-    /**
-     * Add productos
-     *
-     * @param \Backend\AdminBundle\Entity\Producto $productos
-     * @return OrdenIngreso
-     */
-    public function addProducto(\Backend\AdminBundle\Entity\Producto $productos)
-    {
-        $this->productos[] = $productos;
-    
-        return $this;
-    }
 
-    /**
-     * Remove productos
-     *
-     * @param \Backend\AdminBundle\Entity\Producto $productos
-     */
-    public function removeProducto(\Backend\AdminBundle\Entity\Producto $productos)
-    {
-        $this->productos->removeElement($productos);
-    }
-
-    /**
-     * Get productos
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getProductos()
-    {
-        return $this->productos;
-    }
 
     /**
      * Add ingresos

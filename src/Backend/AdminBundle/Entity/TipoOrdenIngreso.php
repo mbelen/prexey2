@@ -30,6 +30,7 @@ class TipoOrdenIngreso
      */
     
     private $isDelete;
+    
     /**
      * @ORM\OneToMany(targetEntity="OrdenIngreso", mappedBy="tipo")
      */
