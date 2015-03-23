@@ -20,7 +20,8 @@
     <div class="control-group">
     <!-- Button -->
     <div class="controls">
-    <button type="submit" class="btn btn-primary"><i class="icon-ok icon-white"></i>Crear</button>
+    <button id="agregar" type="button" class="btn">Agregar productos</button>
+    <button type="button" id="crear" class="btn btn-primary" style="display:none" data-url="{{ path('movimiento_toprocesado') }}"><i class="icon-ok icon-white"></i>Crear</button>
     <button type="button" class="btn btn-inverse" data-url="{{ path('movimiento') }}"><i class="icon-chevron-left icon-white"></i> Back</button>
     
     </div>
@@ -37,6 +38,10 @@
 {% endblock %}
 {% block javascripts %}
   {{ parent() }}
+
+{% javascripts '@BackendAdminBundle/Resources/public/js/add_movimientos.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
  
 {% javascripts '@BackendAdminBundle/Resources/public/js/validate_articulo.js' %}
     <script type="text/javascript" src="{{ asset_url }}"></script>

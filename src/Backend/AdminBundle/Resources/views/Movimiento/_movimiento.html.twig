@@ -2,7 +2,7 @@
 {{ form_label(form.documento,"Documento", { 'label_attr': {'class': 'control-label'} }) }}
 <div class="controls">
  {{ form_widget(form.documento, { 'attr': {'class': 'input-xlarge'} }) }}
- <div id='backend_adminbundle_ordenIngreso_documento_errorloc' class="help-inline error" >{{ form_errors(form.documento) }}</div>
+ <div id='backend_adminbundle_movimiento_documento_errorloc' class="help-inline error" >{{ form_errors(form.documento) }}</div>
 </div>
 </div>
 
@@ -23,19 +23,16 @@
 </div>
 
 <div class="control-group">
-{{ form_label(form.articulos,"Articulo", { 'label_attr': {'class': 'control-label'} }) }}
-<div class="controls">
- {{ form_widget(form.articulos, { 'attr': {'class': 'input-xlarge'} }) }}
- <div id='backend_adminbundle_movimiento_articulos_errorloc' class="help-inline error" >{{ form_errors(form.articulos) }}</div>
-</div>
-</div>
-
-
-<div class="control-group">
 {{ form_label(form.observaciones,"Observaciones", { 'label_attr': {'class': 'control-label'} }) }}
 <div class="controls">
  {{ form_widget(form.observaciones, { 'attr': {'class': 'input-xlarge'} }) }}
- <div id='backend_adminbundle_ordenIngreso_observaciones_errorloc' class="help-inline error" >{{ form_errors(form.observaciones) }}</div>
+ <div id='backend_adminbundle_movimiento_observaciones_errorloc' class="help-inline error" >{{ form_errors(form.observaciones) }}</div>
 </div>
 </div>
 
+<div id ='productos'>
+
+<div id='errores'></div>
+<div id='sucess'></div>
+
+</div>

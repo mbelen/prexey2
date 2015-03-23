@@ -3,6 +3,7 @@
 namespace Backend\AdminBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Backend\AdminBundle\Entity\Movimiento;
@@ -266,6 +267,52 @@ class MovimientoController extends Controller
             ->getForm()
         ;
     }
+   
+    /** 
+     * 
+     */
+     
+     public function toProcesadoAction(Request $request){
+		 
+			$destinoId 		= $request->request->get('destino');
+			$origenId		= $request->request->get('origen');
+			$documento 		= $request->request->get('documento');
+			$observaciones 	= $request->request->get('observaciones');
+			$articulos 	    = $request->request->get('articulos');
+
+			$em = $this->getDoctrine()->getManager();
+		 
+			$destino = $em->getRepository('BackendAdminBundle:Deposito')->find($destinoId);
+			
+			$origen =  $em->getRepository('BackendAdminBundle:Movimiento')->find($origenId);
+			
+			$movimiento = new Movimiento();
+			
+			$movimiento->setDepositoDestino($destino);
+			$movimiento->setDepositoOrigen($origen);
+			$movimiento->setDocumento($documento);
+			
+			if($observaciones) { $movimiento->setObservaciones(); }
+			
+			foreach($articulos as $art){
+				
+				$articulo = $em->getRepository('BackendAdminBundle:Articulo')->findByImei($art);	
+				$movimiento->addArticulos($articulo);
+			
+			}
+			
+			$em->persist($movimiento);
+            $em->flush();
+            
+            $data["resultado"] = true;
+						
+			$response = new Response(json_encode($data));
+			$response->headers->set('Content-Type', 'application/json');
+			
+			return $response;
+		 					 
+	} 
+   
     
      public function exportarAction(Request $request)
     {

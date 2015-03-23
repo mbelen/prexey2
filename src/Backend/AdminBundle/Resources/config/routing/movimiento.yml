@@ -20,6 +20,10 @@ movimiento_update:
     defaults: { _controller: "BackendAdminBundle:Movimiento:update" }
     requirements: { _method: post|put }
 
+movimiento_toprocesado:
+    pattern:  /toprocesado
+    defaults: { _controller: "BackendAdminBundle:Movimiento:toProcesado" }    
+    
 movimiento_delete:
     pattern:  /{id}/delete
     defaults: { _controller: "BackendAdminBundle:Movimiento:delete" }

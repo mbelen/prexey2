@@ -20,13 +20,13 @@ class MovimientoType extends AbstractType
             ->add('documento')
             ->add('depositoOrigen','entity',array(
                 'class'=>'BackendAdminBundle:Deposito',
-                'property'=>'name',
+                'property'=>'nombre',
             ))	
 			->add('depositoDestino','entity',array(
                 'class'=>'BackendAdminBundle:Deposito',
-                'property'=>'name',
-            ))
-            		
+                'property'=>'nombre',
+            ));
+            /*		
             ->add('articulos','entity',array(
                 'class'=>'BackendAdminBundle:Articulo',
                 'query_builder' => function(EntityRepository $er) {
@@ -39,7 +39,7 @@ class MovimientoType extends AbstractType
                 'property'=>'imei' //,
                 //'multiple'=>true //un solo deposito por operario
             ));
-           
+           */
             }
     
     /**

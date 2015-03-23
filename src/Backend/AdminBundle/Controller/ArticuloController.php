@@ -19,14 +19,15 @@ class ArticuloController extends Controller
 
      public function generateSQL($search){
      
-        $dql="SELECT u FROM BackendAdminBundle:Articulo u where u.isDelete=false"  ;
+        $dql="SELECT u FROM BackendAdminBundle:Articulo u JOIN u.marca m where u.isDelete=false"  ;
         $search=mb_convert_case($search,MB_CASE_LOWER);
         
        
         if ($search)
-          $dql.=" and (u.descripcion like '%$search%' or u.imei like '%$search%')";
           
-        $dql .=" order by u.descripcion"; 
+          $dql.=" and (u.descripcion like '%$search%' or u.imei like '%$search%' or m.name like '%$search%')";
+          
+		  $dql .=" order by u.descripcion"; 
         
         return $dql;
      

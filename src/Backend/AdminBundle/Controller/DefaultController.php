@@ -13,10 +13,18 @@ class DefaultController extends Controller
         
            return $this->render('BackendAdminBundle:Default:index.html.twig');
        }
+       
+       else if ( $this->get('security.context')->isGranted('ROLE_POS')) {
+        
+           
+           return $this->redirect($this->generateUrl('articulo'));
+           //return $this->render('BackendAdminBundle:Default:index.html.twig');
+       }
+             
        else
+           
            return $this->redirect($this->generateUrl('user'));
-        
-        
+                
     }
     
     public function accessAction()

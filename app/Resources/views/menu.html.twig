@@ -2,14 +2,14 @@
                 {% if not is_granted('ROLE_VISITOR') %}
                 
                 <ul class="nav">
-                    {% if is_granted('ROLE_VIEWUSER') %}
+                    {% if is_granted('ROLE_VIEWUSER') or is_granted('ROLE_POS')%}
                     <li><a href="{{ path('user') }}">Usuarios</a></li>
                     {% endif %}
                     
                     {% if  is_granted('ROLE_SETEO') or is_granted('ROLE_ADMIN') or
                     is_granted('ROLE_VIEWPROVINCIA') or is_granted('ROLE_VIEWZONA') 
                      %}
-                    <li class="dropdown">           <a href="#" class="dropdown-toggle" data-toggle="dropdown">Configuración<b class="caret"></b></a>
+                    <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Configuración<b class="caret"></b></a>
                       <ul class="dropdown-menu">
                         {% if is_granted('ROLE_ADMIN') %}
                             <li><a href="{{ path('group') }}">Accesos</a></li>
@@ -41,8 +41,7 @@
                     {% if  is_granted('ROLE_VIEWCLIENTE') or is_granted('ROLE_VIEWSUCURSAL') or
                        is_granted('ROLE_VIEWMARCA') or  is_granted('ROLE_VIEWMODELO') or 
                        is_granted('ROLE_VIEWSINTOMA') or is_granted('ROLE_VIEWTIPOARTICULO')
-                       or is_granted('ROLE_VIEWARTICULO')
-                     %}
+                       or is_granted('ROLE_VIEWARTICULO')                      %}
                     
                     <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Entidades<b class="caret"></b></a>
@@ -77,7 +76,7 @@
                        <li> <a href="{{ path('tipo_articulo') }}"> Tipo Artículos</a> </li>
                        <li class="divider"></li>
                        {% endif %}
-                       {% if is_granted('ROLE_VIEWARTICULO') %}
+                       {% if is_granted('ROLE_VIEWARTICULO') or is_granted('ROLE_POS') %}
                        <li> <a href="{{ path('articulo') }}"> Artículos</a> </li>
                        <li class="divider"></li>
                        {% endif %}
@@ -90,19 +89,19 @@
                     <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Ordenes<b class="caret"></b></a>
                       <ul class="dropdown-menu" >
-                       {% if is_granted('ROLE_VIEWCLIENTE') %}
+                       {% if is_granted('ROLE_VIEWORDENING') %}
                        <li> <a href="{{ path('ordenIngreso') }}">Ingreso de Equipos</a> </li>
                        <li class="divider"></li>
                        {% endif %}
-                       {% if is_granted('ROLE_VIEWCLIENTE') %}
+                       {% if is_granted('ROLE_VIEWORDENING') %}
                        <li> <a href="{{ path('ordenIngresoParte') }}">Ingreso de Partes</a> </li>
                        <li class="divider"></li>
                        {% endif %}
-                       {% if is_granted('ROLE_VIEWCLIENTE') %}
+                       {% if is_granted('ROLE_VIEWMOV') %}
                        <li> <a href="{{ path('movimiento') }}">Movimientos de Equipos</a> </li>
                        <li class="divider"></li>
                        {% endif %}
-                       {% if is_granted('ROLE_VIEWCLIENTE') %}
+                       {% if is_granted('ROLE_VIEWMOV') %}
                        <li> <a href="{{ path('movimientoParte') }}">Movimientos de Partes</a> </li>
                        <li class="divider"></li>
                        {% endif %}
