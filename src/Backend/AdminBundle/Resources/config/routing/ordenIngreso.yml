@@ -33,11 +33,14 @@ ordenIngreso_print:
     pattern:  /{id}/print
     defaults: { _controller: "BackendAdminBundle:OrdenIngreso:print" }
 
+ordenIngreso_toaceptado:
+    pattern:  /{id}/toaceptado
+    defaults: { _controller: "BackendAdminBundle:OrdenIngreso:toAceptado" }
 
 ordenIngreso_toprocesadoorden:
     pattern:  /toprocesadoorden
     defaults: { _controller: "BackendAdminBundle:OrdenIngreso:toProcesadoOrden" }    
-
+    
 ordenIngreso_togeneratecombo:
     pattern:  /togeneratecombo
     defaults: { _controller: "BackendAdminBundle:OrdenIngreso:toGenerateCombo" }    

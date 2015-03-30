@@ -3,9 +3,29 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-      <div> Nro Orden: {{ entity.id }}</div>
+	  <div><h2>Orden de ingreso de Equipos</h2></div>
+	  <div><b>Nro Orden: {{ entity.id }}</b></div>
+	  <div>Fecha de creación: {{ entity.createdAt |date('d-m-Y ') }}</div>
       <div>Cliente: {{ entity.getCliente.getName }}</div>
       <div>Documento: {{ entity.getDocumento }}</div>
+      <div>Destino: {{ entity.deposito.getNombre }}</div>
+      <div>
+		   Estado: {{ entity.estado.getName }}
+		  
+		   {% if entity.estado.getId == 2 or  entity.estado.getId == 3 %}
+		  
+		   Fecha aceptada/rechazada: {{ entity.createdAt |date('d-m-Y ') }}	
+		  
+		   {% endif %}		  
+	  </div>
+      <div>
+	  <label>Articulos ingresados</label>
+	  <br/>
+		{% for i in entity.getIngresos %}
+			{{ i.cantidad }} {{ i.getMarca.getName }} {{ i.getModelo.getName }} 
+		<br/> 
+		{% endfor %}
+	</div>
   </body>
 </html>
   

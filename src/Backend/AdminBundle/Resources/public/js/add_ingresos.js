@@ -262,8 +262,11 @@ $("#agregar").click(function() {
 					"cliente" : $('#backend_adminbundle_ordenIngreso_cliente').val(),
 					"documento" : $('#backend_adminbundle_ordenIngreso_documento').val(),
 					"operador" : $('#backend_adminbundle_ordenIngreso_operador').val(),
+					"destino"  : $('#backend_adminbundle_ordenIngreso_deposito').val(),
 					"observaciones" : $('#backend_adminbundle_ordenIngreso_observaciones').val()
 		  };
+		  
+		  console.log(parametros);
 		  
 		  $.ajax({
 					dataType: 'json',
@@ -285,6 +288,8 @@ $("#agregar").click(function() {
 							console.log("ID:"+data.id); 
 							ordenId = data.id;
 							console.log("orden"+ordenId); 
+							console.log("estado"+data.estado);
+							console.log("area"+data.area);
 							//alert("Se ha generado la orden de ingreso");
 							$("#agregar").hide();
 							agregarOtro();

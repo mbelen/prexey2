@@ -8,7 +8,7 @@
 <div class="row-fluid">
   
   
-  <div class="span2">  {% if is_granted("ROLE_ADDARTICULO") %} <button class="btn btn-primary" type="button" id="new_button" data-url="{{ path('ordenIngreso_new') }}" >Nueva Orden</button> {% endif %} </div>
+  <div class="span2">  {% if is_granted("ROLE_ADDORDENING") %} <button class="btn btn-primary" type="button" id="new_button" data-url="{{ path('ordenIngreso_new') }}" >Nueva Orden</button> {% endif %} </div>
   
     <div class="span3">
      
@@ -24,7 +24,7 @@
     </div>
     
      <div class="span2">
-          {% if is_granted("ROLE_VIEWARTICULO") %} <button class="btn btn-primary" type="button" id="exportar_button" data-url="{{ path('articulo_exportar') }}" >Exportar </button> {% endif %}
+          {% if is_granted("ROLE_VIEWORDENING") %} <button class="btn btn-primary" type="button" id="exportar_button" data-url="{{ path('ordenIngreso_exportar') }}" >Exportar </button> {% endif %}
     </div>
     
  </div>
@@ -42,8 +42,9 @@
     <th>Operador Logístico</th>
     <th>Documento</th>
     <th>Estado</th>
+    <th>Destino</th>
     <th>Observaciones</th>
-    <th style="width: 60px;">Acciones</th>
+    <th style="width: 86px;">Acciones</th>
     </tr>
     </thead>
     <tbody>
@@ -55,7 +56,20 @@
                 <td>{{ orden.cliente.name }}</td>
                 <td>{{ orden.operador.name }}</td>
                 <td>{{ orden.documento }}</td>
-                <td>{{ orden.estado.name }}</td>
+                <td>{% if orden.estado.id == 1 %}
+                    
+                    <span class="label label-warning">{{ orden.estado.name }}</span>
+                    
+                    {% endif %}
+                   
+                  {% if orden.estado.id == 2 %}
+                                    
+					<span class="label label-success">{{ orden.estado.name }}</span>
+					
+				  {% endif %}
+                
+                </td>
+                <td> {{ orden.deposito.nombre }} </td>
                 <td>{{ orden.observaciones }}</td>
                 <td>
              
@@ -64,7 +78,7 @@
                 {% endif %}
                 {% if is_granted("ROLE_MODORDENING") %}
 					{% if orden.estado.id == 1 %}
-					<a href="{{ path('ordenIngresoParte_toaceptado', { 'id': orden.id }) }}"><i class="icon-ok"></i></a>
+					<a href="{{ path('ordenIngreso_toaceptado', { 'id': orden.id }) }}"><i class="icon-ok"></i></a>
 					{% endif %}
                 {% endif %}               
                 
@@ -74,11 +88,11 @@
                 
                  {% endif %}
                  {% if is_granted("ROLE_MODORDENING") %}
-                		<a href="{{ path('ordenIngresoParte_procesa',{ 'id': orden.id }) }}"><i class="icon-eye-open"></i></a>
+                		<a href="{{ path('ordenIngreso_procesa',{ 'id': orden.id }) }}"><i class="icon-eye-open"></i></a>
                 {% endif %} 
                 
                  <a href="{{ path('ordenIngreso_procesa',{ 'id': orden.id }) }}"><i class=" icon-refresh"></i></a>
-                 {% if is_granted("ROLE_MODORDENING") %}
+                 {% if is_granted("ROLE_MODORDENING")%}
                 <a href="{{ path('ordenIngreso_print', { 'id': orden.id }) }}"><i class="icon-print"></i></a>
                 {% endif %}
                 </td>

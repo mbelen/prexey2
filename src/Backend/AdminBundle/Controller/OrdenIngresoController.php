@@ -177,6 +177,74 @@ class OrdenIngresoController extends Controller
          throw new AccessDeniedException();  
    
    }
+   
+   /**
+    *  Accept orden de ingreso por parte del destino 
+    * 
+    */
+    
+    public function toAceptadoAction($id){
+		
+		if ( $this->get('security.context')->isGranted('ROLE_DELARTICULO')) { 
+        
+            $em = $this->getDoctrine()->getManager();
+            $entity = $em->getRepository('BackendAdminBundle:OrdenIngreso')->find($id);
+
+            if (!$entity) {
+                $this->get('session')->getFlashBag()->add('error' , 'No se ha encontrado la orden.');
+             
+            }
+           else{
+            
+            $estado = $em->getRepository('BackendAdminBundle:EstadoMovimiento')->find(2);
+            
+            $entity->setEstado($estado); //Aceptada
+            $entity->setAcceptedAt(new \DateTime('now'));
+            $em->persist($entity);
+            $em->flush();
+            $this->get('session')->getFlashBag()->add('success' , 'Se ha aceptado la orden.');
+            
+            }        
+
+        return $this->redirect($this->generateUrl('ordenIngreso'));
+      }
+      else
+       throw new AccessDeniedException();					
+	} 
+	
+	/**
+	 *  Rechazo de la orden por parte del destino
+	 *
+	 */ 
+	 
+	 public function toRechazadoAction($id){
+		
+		if ( $this->get('security.context')->isGranted('ROLE_DELARTICULO')) { 
+        
+            $em = $this->getDoctrine()->getManager();
+            $entity = $em->getRepository('BackendAdminBundle:OrdenIngreso')->find($id);
+
+            if (!$entity) {
+                $this->get('session')->getFlashBag()->add('error' , 'No se ha encontrado la orden.');
+             
+            }
+           else{
+            
+            $estado = $em->getRepository('BackendAdminBundle:EstadoMovimiento')->find(3);
+            
+            $entity->setEstado($estado); //Rechazado
+            $entity->setacceptedAt(new \DateTime('now'));
+            $em->persist($entity);
+            $em->flush();
+            $this->get('session')->getFlashBag()->add('success' , 'Se ha rechazado la orden.');
+            
+            }        
+
+        return $this->redirect($this->generateUrl('ordenIngreso'));
+      }
+      else
+       throw new AccessDeniedException();					
+	} 
  
  
     /**
@@ -353,7 +421,7 @@ class OrdenIngresoController extends Controller
 			$operadorId		= $request->request->get('operador');
 			$documento 		= $request->request->get('documento');
 			$observaciones 	= $request->request->get('observaciones');
-
+			$destinoId = $request->request->get('destino');
 			
 			$em = $this->getDoctrine()->getManager();	
 									
@@ -362,18 +430,29 @@ class OrdenIngresoController extends Controller
 			$tipo = $em->getRepository('BackendAdminBundle:TipoOrdenIngreso')->findOneById(1);
 			
 			$orden->setTipo($tipo);
+			
+			$estado = $em->getRepository('BackendAdminBundle:EstadoMovimiento')->findOneById(1);
+							
+			$orden->setEstado($estado);
+			
+			$deposito = $em->getRepository('BackendAdminBundle:Deposito')->findOneById($destinoId);
+			
+			$area = $deposito->getArea();
+			
+			$orden->setDeposito($deposito);
+			
+			$orden->setArea($area);
 								
 			$cliente = $em->getRepository('BackendAdminBundle:Cliente')->findOneById($clienteId);
 			
 			$operador = $em->getRepository('BackendAdminBundle:OperadorLogistico')->findOneById($operadorId);
 			
-			$estado = $em->getRepository('BackendAdminBundle:EstadoMovimiento')->findOneById(1);
-						
+									
 			$orden->setCliente($cliente);
 			$orden->setOperador($operador);
 			$orden->setDocumento($documento);
 			$orden->setObservaciones($observaciones);
-			$orden->setEstado($estado);
+			
 							
 			$em->persist($orden);
 			
@@ -383,6 +462,8 @@ class OrdenIngresoController extends Controller
 						
 			$data["resultado"] = true;
 			$data["id"] = $ordenId;
+			$data["estado"] = $estado->getName();
+			$data["area"] = $orden->getArea()->getNombre();
 			
 			$response = new Response(json_encode($data));
 			$response->headers->set('Content-Type', 'application/json');
@@ -545,22 +626,41 @@ class OrdenIngresoController extends Controller
                          
                             
         $excelService->excelObj->setActiveSheetIndex(0)
-                    ->setCellValue('A1', 'Fecha Creación')
-                    ->setCellValue('B1', 'Tipo')
+					->setCellValue('A1', 'Numero Orden')
+                    ->setCellValue('B1', 'Fecha Creación')
                     ->setCellValue('C1', 'Cliente')
-                    ->setCellValue('D1', 'Observaciones')                    
+                    ->setCellValue('D1', 'Operador logistico')  
+                    ->setCellValue('E1', 'Documento')
+                    ->setCellValue('F1', 'Estado')
+                    ->setCellValue('G1','Destino')
+                    ->setCellValue('H1','Observaciones') 
+                    ->setCellValue('I1','Fecha recepcion/rechazo')                 
                     ;
                     
         $resultados=$query->getResult();
         $i=2;
         foreach($resultados as $r)
         {
+           if($r->getEstado()->getId() != 1){
+			
+			  $recibido =  $r->getAcceptedAt()->format("d-m-Y");  
+			   
+		   }else{
+			   
+		      $recibido = "-";   
+		   }
+           
            $excelService->excelObj->setActiveSheetIndex(0)
-                         ->setCellValue("A$i",$r->getCreatedAt()->format("d-m-Y"))
-                         ->setCellValue("B$i",$r->getTipo()->getName())
-                         ->setCellValue("C$i",$r->getDisponible())
-                         ->setCellValue("D$i",$r->getDescripcion())
-                         ->setCellValue("E$i",$r->getObservacion())
+						 ->setCellValue("A$i",$r->getId())
+                         ->setCellValue("B$i",$r->getCreatedAt()->format("d-m-Y"))
+                         ->setCellValue("C$i",$r->getCliente()->getName())
+                         ->setCellValue("D$i",$r->getOperador()->getName())
+                         ->setCellValue("E$i",$r->getDocumento())
+                         ->setCellValue("F$i",$r->getEstado()->getName())
+                         ->setCellValue("G$i",$r->getDeposito()->getNombre())
+                         ->setCellValue("H$i",$r->getObservaciones())
+                         ->setCellValue("I$i",$recibido)
+                         
                          ;
           $i++;
         }
@@ -573,6 +673,10 @@ class OrdenIngresoController extends Controller
         $excelService->excelObj->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
         $excelService->excelObj->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
         $excelService->excelObj->getActiveSheet()->getColumnDimension('E')->setAutoSize(true);
+        $excelService->excelObj->getActiveSheet()->getColumnDimension('F')->setAutoSize(true);
+        $excelService->excelObj->getActiveSheet()->getColumnDimension('G')->setAutoSize(true);
+        $excelService->excelObj->getActiveSheet()->getColumnDimension('H')->setAutoSize(true);
+        $excelService->excelObj->getActiveSheet()->getColumnDimension('I')->setAutoSize(true);
         
         
         $fileName="ordenes_".date("Ymd").".xls";

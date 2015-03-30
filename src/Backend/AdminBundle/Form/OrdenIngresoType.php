@@ -41,6 +41,7 @@ class OrdenIngresoType extends AbstractType
                 'property'=>'name',
                 'multiple'=>false //un solo deposito por operario
             ))
+            /*
              ->add('area','entity',array(
                 'class'=>'BackendAdminBundle:AreaTrabajo',
                 'query_builder' => function(EntityRepository $er) {
@@ -52,7 +53,19 @@ class OrdenIngresoType extends AbstractType
             },
                 'property'=>'nombre',
                 'multiple'=>false //un solo deposito por operario
-            ))                        
+            )) */
+             ->add('deposito','entity',array(
+                'class'=>'BackendAdminBundle:Deposito',
+                'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('u')
+                        //->where('u.isDelete = :delete')
+                        //->andWhere('u.id != 2')                        
+                        //->setParameter('delete',false)
+                        ->orderBy('u.nombre', 'ASC');                         
+            },
+                'property'=>'nombre',
+                'multiple'=>false //un solo deposito por operario
+            ))                            
 			/*
 			->add('ingresos', 'collection', array(
 				  'type' 			=> new IngresoType(),

@@ -81,11 +81,17 @@ class Deposito
     protected $movimientosPartesDestino;
  
         
-     /**
+    /**
      * @ORM\OneToMany(targetEntity="OrdenIngreso", mappedBy="deposito")
      */
 
-    protected $ordenesIngreso;           
+    protected $ordenesIngreso;  
+    
+     /**
+     * @ORM\OneToMany(targetEntity="OrdenIngresoParte", mappedBy="deposito")
+     */
+
+    protected $ordenesIngresoParte;          
     
     
     /**
@@ -473,5 +479,38 @@ class Deposito
     public function getMovimientosPartesDestino()
     {
         return $this->movimientosPartesDestino;
+    }
+
+    /**
+     * Add ordenesIngresoParte
+     *
+     * @param \Backend\AdminBundle\Entity\OrdenIngresoParte $ordenesIngresoParte
+     * @return Deposito
+     */
+    public function addOrdenesIngresoParte(\Backend\AdminBundle\Entity\OrdenIngresoParte $ordenesIngresoParte)
+    {
+        $this->ordenesIngresoParte[] = $ordenesIngresoParte;
+    
+        return $this;
+    }
+
+    /**
+     * Remove ordenesIngresoParte
+     *
+     * @param \Backend\AdminBundle\Entity\OrdenIngresoParte $ordenesIngresoParte
+     */
+    public function removeOrdenesIngresoParte(\Backend\AdminBundle\Entity\OrdenIngresoParte $ordenesIngresoParte)
+    {
+        $this->ordenesIngresoParte->removeElement($ordenesIngresoParte);
+    }
+
+    /**
+     * Get ordenesIngresoParte
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getOrdenesIngresoParte()
+    {
+        return $this->ordenesIngresoParte;
     }
 }

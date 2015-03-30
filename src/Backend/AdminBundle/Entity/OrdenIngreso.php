@@ -98,6 +98,12 @@ class OrdenIngreso
     */
 
     protected $estado; 
+    
+    /**
+     * @ORM\Column(name="accepted_at", type="datetime",nullable=true)
+     */    
+     
+    private $acceptedAt;
 
         
     /**
@@ -435,5 +441,28 @@ class OrdenIngreso
     public function getEstado()
     {
         return $this->estado;
+    }
+
+    /**
+     * Set acceptedAt
+     *
+     * @param \DateTime $acceptedAt
+     * @return OrdenIngreso
+     */
+    public function setAcceptedAt($acceptedAt)
+    {
+        $this->acceptedAt = $acceptedAt;
+    
+        return $this;
+    }
+
+    /**
+     * Get acceptedAt
+     *
+     * @return \DateTime 
+     */
+    public function getAcceptedAt()
+    {
+        return $this->acceptedAt;
     }
 }

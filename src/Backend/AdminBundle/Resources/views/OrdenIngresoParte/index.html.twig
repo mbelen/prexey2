@@ -41,8 +41,8 @@
     <th>Cliente</th>
     <th>Operador Logístico</th>
     <th>Documento</th>
-    <th>Observaciones</th>
     <th>Destino</th>
+    <th>Observaciones</th>
     <th>Estado</th>
     <th style="width: 86px;">Acciones</th>
     </tr>
@@ -56,10 +56,18 @@
                 <td>{{ orden.cliente.name }}</td>
                 <td>{{ orden.operador.name }}</td>
                 <td>{{ orden.documento }}</td>
+                <td>{{ orden.deposito.nombre }}</td>
                 <td>{{ orden.observaciones }}</td>
-                <td>{{ orden.observaciones }}</th>
-                <td>{{ orden.estado.getName }}</td>
-                
+                <td>{% if orden.estado.id == 1 %}                    
+                    <span class="label label-warning">{{ orden.estado.name }}</span>                    
+                    {% endif %}                   
+					{% if orden.estado.id == 2 %}                                 
+					<span class="label label-success">{{ orden.estado.name }}</span>					
+				    {% endif %}				  
+				    {% if orden.estado.id == 3 %}                                    
+					<span class="label label-important">{{ orden.estado.name }}</span>					
+				    {% endif %}                
+                </td>                
                 <td>
                 {% if is_granted("ROLE_MODORDENING") %}
                 <a href="{{ path('ordenIngresoParte_edit', { 'id': orden.id }) }}"><i class="icon-pencil"></i></a>
@@ -69,7 +77,7 @@
 					<a href="{{ path('ordenIngresoParte_toaceptado', { 'id': orden.id }) }}"><i class="icon-ok"></i></a>
 					{% endif %}
                 {% endif %}                
-                {% if is_granted("ROLE_DELORDENING") %}
+                {% if is_granted("ROLE_MODORDENING") %}
 					{% if orden.estado.id != 2 and orden.estado.id != 3  %}
 						<a href="{{ path('ordenIngresoParte_torechazado', { 'id': orden.id }) }}"><i class="icon-remove"></i></a>
                 	{% endif %}
