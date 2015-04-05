@@ -42,7 +42,7 @@
      <th>Deposito Destino</th>
      <th>Estado</th>
      <th>Observaciones</th>
-    <th style="width: 36px;">Acciones</th>
+    <th style="width: 86px;">Acciones</th>
     </tr>
     </thead>
     <tbody>
@@ -53,17 +53,39 @@
                 <td>{{ movimiento.documento}}</td>
                 <td>{{ movimiento.getDepositoOrigen.getNombre }}</td>
                 <td>{{ movimiento.getDepositoDestino.getNombre }}</td>                
-                <td>{{ movimiento.estado}}</td>
+                <td>
+					{% if movimiento.estado.id == 1 %}                    
+                    <span class="label label-warning">{{ movimiento.estado.name }}</span>                    
+                    {% endif %}                   
+					{% if movimiento.estado.id == 2 %}                                 
+					<span class="label label-success">{{ movimiento.estado.name }}</span>					
+				    {% endif %}				  
+				    {% if movimiento.estado.id == 3 %}                                    
+					<span class="label label-important">{{ movimiento.estado.name }}</span>					
+				    {% endif %}  
+                
+                </td>
                 <td>{{ movimiento.observaciones}}</td>
                 <td>
                 {% if is_granted("ROLE_MODORDENING") %}
                 <a href="{{ path('movimientoParte_edit', { 'id': movimiento.id }) }}"><i class="icon-pencil"></i></a>
                 {% endif %}
-                 {% if is_granted("ROLE_DELORDENING") %}
-                
-                <a href="#myModal" role="button" class="confirm-delete" data-toggle="modal" data-id={{ movimiento.id }} ><i class="icon-remove"></i></a>
-                
-                 {% endif %}
+                {% if is_granted("ROLE_MODORDENING") %}
+					{% if movimiento.estado.id == 1 %}
+					<a href="{{ path('movimientoParte_toaceptado', { 'id': movimiento.id }) }}"><i class="icon-ok"></i></a>
+					{% endif %}
+                {% endif %}                
+                {% if is_granted("ROLE_MODORDENING") %}
+					{% if movimiento.estado.id != 2 and movimiento.estado.id != 3  %}
+						<a href="{{ path('movimientoParte_torechazado', { 'id': movimiento.id }) }}"><i class="icon-remove"></i></a>
+                	{% endif %}
+                {% endif %}
+                {% if is_granted("ROLE_MODORDENING") %}
+                		<a href="{{ path('movimientoParte_detail',{ 'id': movimiento.id }) }}"><i class="icon-eye-open"></i></a>
+				{% endif %}
+				{% if is_granted("ROLE_MODORDENING") %}
+				<a href="{{ path('movimientoParte_print', { 'id': movimiento.id }) }}"><i class="icon-print"></i></a>
+                {% endif %}
                 </td>
     </tr>
     

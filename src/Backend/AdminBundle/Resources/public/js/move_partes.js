@@ -1,6 +1,7 @@
 var j = 0;
 
 var movimientoId;
+var movParts = new Array();
 
 function generarCombo() {
   
@@ -28,7 +29,7 @@ function generarCombo() {
 							.attr("selected","selected");
 							
          					 $.each(data.items, function(i, value) {
-								$('#parte_'+k).append('<option value='+value.id+'>'+value.codigo+'</option>');
+								$('#parte_'+k).append('<option value='+value.id+' data-stock='+value.stock+'>'+value.codigo+'</option>');
 							 
 						     });
 					    }				
@@ -101,60 +102,40 @@ $('.btn_agregar').click(function(){
 		$('#errores').html("Debe seleccionar un codigo de parte");
 		
 		errores++;			
+	
+	}else{
+	
+		var parteId = $('#parte_'+id).val(); 		
 	}		
 	
 	if(errores == 0){		 
 	
-		var path = $(this).data("url");
+		//var path = $(this).data("url");
 					
 	    $('#errores').html("");
-	
-		var params = {
+	    
+	    var cantidad = $('#cantidad_'+id).val();
+	    
+	    var selected = $('#parte_'+id).find('option:selected');
+	    var stock = selected.data('stock');	    
+	    	    	    
+	    if(cantidad > stock){
+		
+			alert("El stock de esa parte es:"+stock);
 			
-			'movimiento': movimientoId,
-			'cantidad':	$('#cantidad_'+id).val(),
-			'parte': 	$('#parte_'+id).val()
-		};
+		}else{
 		
-		console.log(params);
-		
-		$.ajax({
-					dataType: 'json',
-					data:  params,
-					url:   path,
-					type:  'post',
-					})
-					.done(function (data) {												 
-								
-						  if(data.resultado){						  
-							/*														
-							if(data.stock == 0){ 
-								
-								$("#sucess").html("Se agrego correctamente. Ya no hay stock de esta parte");								
-							}
-							if(data.stock < 0){
-							
-								$("#sucess").html("Solo hay "+data.disponible+" partes");
-							
-							}
-							
-							$("#sucess").html("Se agrego correctamente");	                  
-						  */
-							agregarOtro();
-						  
-						  }else{
-							  
-							  $("#sucess").html("Se produjo un error al cargar el movimiento");
-						  }
-					})
-					.always(function(){
-											  
-						//$('#crear').show();							
-						
-					});	
+			var parte = [parteId,cantidad];
+			movParts.push(parte);
+			$('#sucess').html("Se ha agregado correctamente");
+			console.log("elemento array:"+parte);
+			console.log(movParts);
+			agregarOtro();
+			$('#terminar').show();
+		}
 			
 	 } // if-else 	
-
+	
 });
 
 $('.btn_eliminar').click(function(){
@@ -168,6 +149,22 @@ $('.btn_eliminar').click(function(){
 	$('#'+art).hide();	
 	
 	var i = id.replace('eliminar_',"");
+	
+	var cantidadId = id.replace('eliminar_','cantidad_');
+	
+	var cant = $('#'+cantidadId).val();
+	
+	var parteId = id.replace('eliminar_','parte_');
+	
+	var value = $('#'+parteId).val();
+	
+	var elem = [cant,value];
+	
+	var index = movParts.indexOf(elem);
+	
+	movParts.splice(index,1);
+	
+	console.log(movParts);
 	
 	console.log(i);
 	
@@ -189,8 +186,42 @@ $(document).ready(function(){
 
 	$('#partes').hide();
 	$('#crear').hide();
+	$('#terminar').hide();
 	
 });
+
+$('#terminar').click(function(){
+	
+	var path=$("#terminar").data('url');
+	var reUrl = $('#terminar').data('redirect');
+	
+	params = {
+		  
+		     'movimiento': movimientoId,
+		     'partes': movParts		
+		}
+		
+		console.log(params);
+	
+	$.ajax({
+			 dataType: 'json',
+			 data:  params,
+			 url:   path,
+			 type:  'post',
+			
+			})
+			.done(function (data) {	
+				
+				//alert(data.resultado);
+				console.log(data.parte);
+				if(data.resultado){
+					$("#sucess").html("Se ha guardado correctamente el movimiento");
+					$(location).attr('href',reUrl);
+				}
+			});	
+	
+});
+
 	
 $("#agregar").click(function() {
 	

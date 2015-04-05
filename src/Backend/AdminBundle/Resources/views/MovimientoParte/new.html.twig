@@ -30,7 +30,7 @@
     <!-- Button -->
     <div class="controls">
     <button id="agregar" type="button" class="btn" data-url="{{ path('movimientoParte_toprocesadomovimiento') }}">Agregar partes</button>
-    <button type="button" class="btn btn-inverse" data-url="{{ path('movimientoParte') }}"><i class="icon-chevron-left icon-white"></i> Back</button>
+    <button id="terminar" type="button" class="btn" data-url="{{ path('movimientoParte_toclosemovimiento') }}" data-redirect="{{ path('movimientoParte') }}"><i class="icon-chevron-left icon-white"></i> Terminar</button>
     
     </div>
     

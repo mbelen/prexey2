@@ -312,6 +312,36 @@ class MovimientoController extends Controller
 			return $response;
 		 					 
 	} 
+	
+	public function toValidateImeiAction(Request $request){
+		 
+			$imei = $request->request->get('imei');
+			
+			//$dql="SELECT u FROM BackendAdminBundle:Articulo u where u.imei = '$imei'";
+			/*
+			$em = $this->getDoctrine()->getManager();
+			$articulo = $em->createQuery($dql)->getResult();        
+           
+            if($articulo){
+            
+				$data["resultado"] = true;
+				$data["marca"] = $dql;
+            
+			}else{
+				
+				$data["resultado"] = false;	
+			}
+			*/
+			
+			$data["resultado"] = $true;
+			$data["imei"] = $imei;			
+			$response = new Response(json_encode($data));
+			$response->headers->set('Content-Type', 'application/json');
+			
+			return $response;
+		 					 
+	} 
+	
    
     
      public function exportarAction(Request $request)

@@ -31,7 +31,7 @@ class MovimientoParte
      */    
      
     private $createdAt;
-    
+  
      /**
      * @ORM\Column(name="is_delete", type="boolean" )
      */
@@ -39,24 +39,30 @@ class MovimientoParte
     private $isDelete;
    
    /**
-     * @ORM\ManyToOne(targetEntity="Deposito", inversedBy="movimiento")
+     * @ORM\ManyToOne(targetEntity="Deposito", inversedBy="movimientosPartesDestino")
      * @ORM\JoinColumn(name="destino_id", referencedColumnName="id")
     */
 
     protected $depositoDestino;
     
 	/**
-     * @ORM\ManyToOne(targetEntity="Deposito", inversedBy="movimiento")
+     * @ORM\ManyToOne(targetEntity="Deposito", inversedBy="movimientosPartesOrigen")
      * @ORM\JoinColumn(name="origen_id", referencedColumnName="id")
     */
 
     protected $depositoOrigen;    
+    
+    /**
+     * @ORM\OneToMany(targetEntity="IngresoParte", mappedBy="movimiento")
+     */
+
+    protected $ingresos; 
 
     /**
      * @ORM\ManyToMany(targetEntity="Parte", mappedBy="movimientos")
      */    
 	
-    public $partes;
+    private $partes;
             
     
 	/**
@@ -65,12 +71,19 @@ class MovimientoParte
      private $observaciones;
    
      /**
-     * @ORM\ManyToOne(targetEntity="EstadoMovimiento", inversedBy="movimiento")
+     * @ORM\ManyToOne(targetEntity="EstadoMovimiento", inversedBy="movimientosParte")
      * @ORM\JoinColumn(name="estado_id", referencedColumnName="id")
 	 */
 
      protected $estado; 
 
+	 /**
+     * @ORM\Column(name="updated_at", type="datetime",nullable=true)
+     */    
+     
+    private $updatedAt;
+    	
+    
     
     /**
      * Constructor
@@ -199,51 +212,6 @@ class MovimientoParte
         return $this;
     }
 
-    /**
-     * Set cliente
-     *
-     * @param \Backend\AdminBundle\Entity\Cliente $cliente
-     * @return OrdenIngreso
-     */
-    public function setCliente(\Backend\AdminBundle\Entity\Cliente $cliente = null)
-    {
-        $this->cliente = $cliente;
-    
-        return $this;
-    }
-
-    /**
-     * Get cliente
-     *
-     * @return \Backend\AdminBundle\Entity\Cliente 
-     */
-    public function getCliente()
-    {
-        return $this->cliente;
-    }
-
-    /**
-     * Set operador
-     *
-     * @param \Backend\AdminBundle\Entity\OperadorLogistico $operador
-     * @return OrdenIngreso
-     */
-    public function setOperador(\Backend\AdminBundle\Entity\OperadorLogistico $operador = null)
-    {
-        $this->operador = $operador;
-    
-        return $this;
-    }
-
-    /**
-     * Get operador
-     *
-     * @return \Backend\AdminBundle\Entity\OperadorLogistico 
-     */
-    public function getOperador()
-    {
-        return $this->operador;
-    }
 
     /**
      * Set documento
@@ -371,38 +339,6 @@ class MovimientoParte
         $this->observaciones->removeElement($observaciones);
     }
 
-    /**
-     * Add articulos
-     *
-     * @param \Backend\AdminBundle\Entity\Movimiento $articulos
-     * @return Movimiento
-     */
-    public function addArticulo(\Backend\AdminBundle\Entity\Movimiento $articulos)
-    {
-        $this->articulos[] = $articulos;
-    
-        return $this;
-    }
-
-    /**
-     * Remove articulos
-     *
-     * @param \Backend\AdminBundle\Entity\Movimiento $articulos
-     */
-    public function removeArticulo(\Backend\AdminBundle\Entity\Movimiento $articulos)
-    {
-        $this->articulos->removeElement($articulos);
-    }
-
-    /**
-     * Get articulos
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getArticulos()
-    {
-        return $this->articulos;
-    }
 
     /**
      * Add partes
@@ -458,5 +394,61 @@ class MovimientoParte
     public function getEstado()
     {
         return $this->estado;
+    }
+
+    /**
+     * Set updatedAt
+     *
+     * @param \DateTime $updatedAt
+     * @return MovimientoParte
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+    
+        return $this;
+    }
+
+    /**
+     * Get updatedAt
+     *
+     * @return \DateTime 
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * Add ingresos
+     *
+     * @param \Backend\AdminBundle\Entity\IngresoParte $ingresos
+     * @return MovimientoParte
+     */
+    public function addIngreso(\Backend\AdminBundle\Entity\IngresoParte $ingresos)
+    {
+        $this->ingresos[] = $ingresos;
+    
+        return $this;
+    }
+
+    /**
+     * Remove ingresos
+     *
+     * @param \Backend\AdminBundle\Entity\IngresoParte $ingresos
+     */
+    public function removeIngreso(\Backend\AdminBundle\Entity\IngresoParte $ingresos)
+    {
+        $this->ingresos->removeElement($ingresos);
+    }
+
+    /**
+     * Get ingresos
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getIngresos()
+    {
+        return $this->ingresos;
     }
 }

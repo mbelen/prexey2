@@ -184,7 +184,8 @@ $("#agregar").click(function() {
 	
   var path=$("#agregar").data("url");	
 
-  console.log(path);	
+  console.log(path);
+  console.log($('#backend_adminbundle_ordenIngresoParte_destino').val());	
   
   if($('#backend_adminbundle_ordenIngresoParte_documento').val().length <= 1){
 	
@@ -198,7 +199,8 @@ $("#agregar").click(function() {
 					"cliente" : $('#backend_adminbundle_ordenIngresoParte_cliente').val(),
 					"documento" : $('#backend_adminbundle_ordenIngresoParte_documento').val(),
 					"operador" : $('#backend_adminbundle_ordenIngresoParte_operador').val(),
-					"observaciones" : $('#backend_adminbundle_ordenIngresoParte_observaciones').val()
+					"observaciones" : $('#backend_adminbundle_ordenIngresoParte_observaciones').val(),
+					"destino": $('#backend_adminbundle_ordenIngresoParte_deposito').val()
 		  };
 		  
 		  $.ajax({

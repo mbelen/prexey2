@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Backend\AdminBundle\Entity\MovimientoParte;
+use Backend\AdminBundle\Entity\IngresoParte;
 use Backend\AdminBundle\Form\MovimientoParteType;
 
 /**
@@ -21,18 +22,21 @@ class MovimientoParteController extends Controller
         $dql="SELECT u FROM BackendAdminBundle:MovimientoParte u where u.isDelete=false"  ;
         $search=mb_convert_case($search,MB_CASE_LOWER);
         
+        
        /*
         if ($search)
           $dql.=" and u.descripcion like '%$search%' ";
           
         $dql .=" order by u.descripcion"; 
         */
+        $dql .=" order by u.id desc";
+        
         return $dql;
      
      }
 
     /**
-     * Lists all OrdenIngreso entities.
+     * Lists all MovimientoParte entities.
      *
      */
     public function indexAction(Request $request,$search)
@@ -268,6 +272,30 @@ class MovimientoParteController extends Controller
         ;
     }
     
+    public function detailAction($id){
+	   
+       if ( $this->get('security.context')->isGranted('ROLE_MODARTICULO')) { 
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('BackendAdminBundle:MovimientoParte')->find($id);
+
+        if (!$entity) {
+            
+             $this->get('session')->getFlashBag()->add('error' , 'No se ha encontrado la orden .');
+             return $this->redirect($this->generateUrl('movimientoParte'));
+        }
+        
+        return $this->render('BackendAdminBundle:MovimientoParte:detail.html.twig', array(
+            'entity'      => $entity                       
+        ));
+      }
+      else
+         throw new AccessDeniedException();  
+   
+   }    
+    
+    
+    
     /**
     *  Ajax
     **/ 
@@ -311,58 +339,42 @@ class MovimientoParteController extends Controller
 			return $response;
 	}
 	
-	public function toProcesadoMovsAction(Request $request){
+	
+	public function toCloseMovimientoAction(Request $request){
 		
-			/*			  			
+							  			
 			$movimientoId 	= $request->request->get('movimiento');
-			$cantidad		= $request->request->get('cantidad');
-			$parteId 		= $request->request->get('parte');
+			$partes		    = $request->request->get('partes');
+			
 									
 			$em = $this->getDoctrine()->getManager();
+			$movimiento =  $em->getRepository('BackendAdminBundle:MovimientoParte')->find($movimientoId);
+																	
+			foreach($partes as $p){
+			
+				$parte = $em->getRepository('BackendAdminBundle:Parte')->find($p[0]);
+				$parte->setStock($p[1]);	
+				$em->persist($parte);		
+				
+				$elemento = new IngresoParte();
+						
+				$elemento->setCantidad($p[1]);
+				$elemento->setParte($parte);
+				$elemento->setMovimiento($movimiento);
 												
-			$parte = $em->getRepository('BackendAdminBundle:Parte')->findOneById($parteId);
-						
-			$movimiento =  $em->getRepository('BackendAdminBundle:MovimientoParte')->findOneById($movimientoId);
-											
-			if($parte->getStock() < $cantidad) {					
-			
-				$data["stock"] = -1; // Si no hay stock no hace nada
-				$data["disponible"] = $parte->getStock();							
-			
-			}
-			
-			
-			
-			else{
-				
-				$data["stock"] = $parte->stock;
-				$nuevoStock = $parte->stock - $cantidad;	
-				$parte->setStock($nuevoStock);				
-				$em->persist($parte);
-				$em->flush();
-				
-				$movimientoParte = new IngresoParte();
-						
-				$ingresoParte->setCantidad($cantidad);
-				$ingresoParte->setParte($parte);
-				$ingresoParte->setOrden($orden);
-								
-				$em->persist($ingresoParte);
+				$em->persist($elemento);
 				$em->flush();		
-			
-			}		
-			
-			*/				
-			//$data["disponible"] = $parte->getStock();			
-			
-			
-			$data["resultado"] = true;
-									
+			}
+			 
+			$data["parte"] = $partes[0][0];
+			$data["resultado"] = true;		
+					
 			$response = new Response(json_encode($data));
 			$response->headers->set('Content-Type', 'application/json');
 			
 			return $response;
 	}
+	
     
     public function toGenerateComboAction(Request $request){
 		
@@ -375,8 +387,9 @@ class MovimientoParteController extends Controller
 			foreach($partes as $parte)
 			{
 				$id = $parte->getId();
-				$codigo = $parte->getCodigo(); 
-				$part = array('id'=>$id,'codigo'=>$codigo);
+				$codigo = $parte->getCodigo();
+				$stock = $parte->getStock(); 
+				$part = array('id'=>$id,'codigo'=>$codigo,'stock'=>$stock);
 				$items[] = $part;
 			}			
 		
@@ -411,7 +424,7 @@ class MovimientoParteController extends Controller
             
             }        
 
-        return $this->redirect($this->generateUrl('ordenIngresoParte'));
+        return $this->redirect($this->generateUrl('movimientoParte'));
       }
       else
        throw new AccessDeniedException();					
@@ -446,7 +459,39 @@ class MovimientoParteController extends Controller
       else
        throw new AccessDeniedException();					
 	}
+	
+	/**
+    *   Print orden de movimiento
+    * 
+    */ 
     
+     public function printAction(Request $request, $id)
+   {
+    $em = $this->getDoctrine()->getManager();
+      $entity = $em->getRepository('BackendAdminBundle:MovimientoParte')->find($id);
+
+      if (!$entity) {
+          $this->get('session')->getFlashBag()->add('error' , 'No se ha encontrado la orden .');
+          return $this->redirect($this->generateUrl('ordenIngreso' ));
+      }
+      else{
+        require_once($this->get('kernel')->getRootDir().'/config/dompdf_config.inc.php');
+
+        $dompdf = new \DOMPDF();
+        $html= $this->renderView('BackendAdminBundle:MovimientoParte:recibo_orden.html.twig',
+          array('entity'=>$entity)
+        );
+        $dompdf->load_html($html);
+        $dompdf->render();
+        $fileName="recibo_movimiento_parte_".$id.".pdf";
+        $response= new Response($dompdf->output(), 200, array(
+        	'Content-Type' => 'application/pdf; charset=utf-8'
+        ));
+        $response->headers->set('Content-Disposition', 'attachment;filename='.$fileName);
+        return $response;
+      }
+   
+   }
     
      public function exportarAction(Request $request)
     {

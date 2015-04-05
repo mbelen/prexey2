@@ -29,6 +29,8 @@ class OrdenIngresoParteController extends Controller
           
         $dql .=" order by u.descripcion"; 
         */
+        $dql .=" order by u.id desc";
+        
         return $dql;
      
      }
@@ -305,7 +307,7 @@ class OrdenIngresoParteController extends Controller
 			$operadorId		= $request->request->get('operador');
 			$documento 		= $request->request->get('documento');
 			$observaciones 	= $request->request->get('observaciones');
-
+			$destinoId	    = $request->request->get('destino');
 			
 			$em = $this->getDoctrine()->getManager();	
 									
@@ -320,12 +322,15 @@ class OrdenIngresoParteController extends Controller
 			$operador = $em->getRepository('BackendAdminBundle:OperadorLogistico')->findOneById($operadorId);
 			
 			$estado = $em->getRepository('BackendAdminBundle:EstadoMovimiento')->findOneById(1);
+			
+			$destino = $em->getRepository('BackendAdminBundle:Deposito')->findOneById($destinoId);
 						
 			$orden->setCliente($cliente);
 			$orden->setOperador($operador);
 			$orden->setDocumento($documento);
 			$orden->setObservaciones($observaciones);
 			$orden->setEstado($estado);
+			$orden->setDeposito($destino);
 										
 			$em->persist($orden);
 			
@@ -335,6 +340,7 @@ class OrdenIngresoParteController extends Controller
 						
 			$data["resultado"] = true;
 			$data["id"] = $ordenId;
+			$data["destino"] = $destino->getNombre();
 			
 			$response = new Response(json_encode($data));
 			$response->headers->set('Content-Type', 'application/json');

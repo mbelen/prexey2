@@ -56,7 +56,7 @@
                 <td>{{ orden.cliente.name }}</td>
                 <td>{{ orden.operador.name }}</td>
                 <td>{{ orden.documento }}</td>
-                <td>{{ orden.deposito.nombre }}</td>
+                <td>{{ orden.deposito.getNombre }}</td>
                 <td>{{ orden.observaciones }}</td>
                 <td>{% if orden.estado.id == 1 %}                    
                     <span class="label label-warning">{{ orden.estado.name }}</span>                    

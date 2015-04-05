@@ -19,7 +19,7 @@ function agregarOtro(){
   
   var articulo = $('<input type="text" class="input_articulo"  id= "articulo_'+j+'" name="articulo_'+j+'" style="float:left;margin-left:5px">');
   
-  var nuevoBoton = $('<div><input type="button" class="btn_agregar" id= "agregar'+j+'" name="agregar" value="agregar" data-art ="#articulo_'+j+'" style="float:left"></div>');
+  var nuevoBoton = $('<div><input type="button" class="btn_agregar" id= "agregar'+j+'" name="agregar" value="agregar" data-art ="#articulo_'+j+'" data-url="movimiento_tovalidateimei" style="float:left"></div>');
 
   var nuevoEliminar = $('<div><input type="button" class="btn_eliminar" id= "eliminar_'+j+'" data-art ="#articulo_'+j+'" name="eliminar" value="eliminar"></div>');
   
@@ -40,25 +40,59 @@ $('.btn_agregar').click(function(){
 
 	var articulo = $(id).val();
 	
-	alert(articulo);
-			
-	if(articulos.indexOf(articulo) == -1){ 
-	
-		articulos.push(articulo);
-	
-		console.log(articulos);
-	
-		j++;
+	if(articulo.length < 15){
 		
-		console.log(j);
-	
-		agregarOtro();
+		alert("Debe ingresar un IMEI de 15 caracteres");	
 	
 	}else{
 		
-		alert("Ese articulo ya ha sido cargado");	
+			var path = $(this).data('url');	 
+			console.log(path);
+			
+			var parametros = { "imei" : articulo };
+			
+			$.ajax({
+					dataType: 'json',
+					data:  parametros,
+					url:   path,
+					type:  'post',
+					})
+					.done(function (data) {
+						
+						console.log(data.resultado);
+																
+						if(!data.resultado){				  					
+						  
+							console.log("no existe");				
+							alert("El imei ingresado no corresponde a ningun equipo ingresado");	
+						
+						}else{			
+							console.log(data.imei);
+							
+							if(articulos.indexOf(articulo) == -1){ 
+							
+								articulos.push(articulo);
+							
+								console.log(articulos);
+							
+								j++;
+								
+								console.log(j);
+							
+								agregarOtro();
+							
+							}else{
+								
+								alert("Ese articulo ya ha sido cargado");	
+							}
+						}
+					})
+					.always(function(){					
+							
+						//$("#agregar").hide();
+						
+				});	
 	}	
-	
 });
 
 $('.btn_eliminar').click(function(){
@@ -78,6 +112,8 @@ $('.btn_eliminar').click(function(){
 });	
 
 } // agregar otro 
+
+
 
 $(document).ready(function(){
 

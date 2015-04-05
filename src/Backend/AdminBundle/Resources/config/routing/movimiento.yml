@@ -22,7 +22,11 @@ movimiento_update:
 
 movimiento_toprocesado:
     pattern:  /toprocesado
-    defaults: { _controller: "BackendAdminBundle:Movimiento:toProcesado" }    
+    defaults: { _controller: "BackendAdminBundle:Movimiento:toProcesado" }
+   
+movimiento_tovalidateimei:
+    pattern:  /tovalidateimei
+    defaults: { _controller: "BackendAdminBundle:Movimiento:toValidateImei" }       
     
 movimiento_delete:
     pattern:  /{id}/delete

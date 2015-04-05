@@ -56,18 +56,15 @@
                 <td>{{ orden.cliente.name }}</td>
                 <td>{{ orden.operador.name }}</td>
                 <td>{{ orden.documento }}</td>
-                <td>{% if orden.estado.id == 1 %}
-                    
-                    <span class="label label-warning">{{ orden.estado.name }}</span>
-                    
-                    {% endif %}
-                   
-                  {% if orden.estado.id == 2 %}
-                                    
-					<span class="label label-success">{{ orden.estado.name }}</span>
-					
-				  {% endif %}
-                
+                <td>{% if orden.estado.id == 1 %}                    
+                    <span class="label label-warning">{{ orden.estado.name }}</span>                    
+                    {% endif %}                   
+					{% if orden.estado.id == 2 %}                                    
+					<span class="label label-success">{{ orden.estado.name }}</span>					
+					{% endif %}
+					{% if movimiento.estado.id == 3 %}                                    
+					<span class="label label-important">{{ movimiento.estado.name }}</span>					
+				    {% endif %}                
                 </td>
                 <td> {{ orden.deposito.nombre }} </td>
                 <td>{{ orden.observaciones }}</td>
@@ -89,7 +86,7 @@
                  {% endif %}
                  {% if is_granted("ROLE_MODORDENING") %}
                 		<a href="{{ path('ordenIngreso_procesa',{ 'id': orden.id }) }}"><i class="icon-eye-open"></i></a>
-                {% endif %} 
+				 {% endif %} 
                 
                  <a href="{{ path('ordenIngreso_procesa',{ 'id': orden.id }) }}"><i class=" icon-refresh"></i></a>
                  {% if is_granted("ROLE_MODORDENING")%}

@@ -1,0 +1,28 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  </head>
+  <body>
+	  <div><h2>Orden de movimiento de Partes</h2></div>
+	  <div><b>Nro Orden: {{ entity.id }}</b></div>
+	  <div>Fecha de creación: {{ entity.createdAt |date('d-m-Y ') }}</div>
+      <div>Documento: {{ entity.getDocumento }}</div>
+      <div>Origen: {{ entity.depositoOrigen.getNombre }}</div>
+      <div>Destino: {{ entity.depositoDestino.getNombre }}</div>
+      <div>
+		   Estado: {{ entity.estado.getName }}		  
+		   {% if entity.estado.getId == 2 or  entity.estado.getId == 3 %}		  
+				Fecha aceptada/rechazada: {{ entity.updatedAt |date('d-m-Y ') }}		  
+		   {% endif %}		  
+	  </div>
+      <div>
+	  <label>Partes</label>
+	  <br/>
+			{% for i in entity.getIngresos %}				
+				{{ i.cantidad }} {{ i.parte.getCodigo }} {{ i.parte.getNombreInterno }} 				
+				<br/> 
+			{% endfor %}
+	</div>
+  </body>
+</html>
+  

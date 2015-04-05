@@ -56,7 +56,13 @@ class IngresoParte
      */
         
     protected $orden;
-		
+	
+	/**
+     * @ORM\ManyToOne(targetEntity="MovimientoParte", inversedBy="ingresos")
+     * @ORM\JoinColumn(name="movimiento_id", referencedColumnName="id")
+     */
+        
+    protected $movimiento;	
 		         
     /**
      * Constructor
@@ -285,5 +291,51 @@ class IngresoParte
     public function getParte()
     {
         return $this->parte;
+    }
+
+    /**
+     * Set tipoMovimiento
+     *
+     * @param integer $tipoMovimiento
+     * @return IngresoParte
+     */
+    public function setTipoMovimiento($tipoMovimiento)
+    {
+        $this->tipoMovimiento = $tipoMovimiento;
+    
+        return $this;
+    }
+
+    /**
+     * Get tipoMovimiento
+     *
+     * @return integer 
+     */
+    public function getTipoMovimiento()
+    {
+        return $this->tipoMovimiento;
+    }
+
+    /**
+     * Set movimiento
+     *
+     * @param \Backend\AdminBundle\Entity\MovimientoParte $movimiento
+     * @return IngresoParte
+     */
+    public function setMovimiento(\Backend\AdminBundle\Entity\MovimientoParte $movimiento = null)
+    {
+        $this->movimiento = $movimiento;
+    
+        return $this;
+    }
+
+    /**
+     * Get movimiento
+     *
+     * @return \Backend\AdminBundle\Entity\MovimientoParte 
+     */
+    public function getMovimiento()
+    {
+        return $this->movimiento;
     }
 }
