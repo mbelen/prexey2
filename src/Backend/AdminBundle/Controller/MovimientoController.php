@@ -24,9 +24,9 @@ class MovimientoController extends Controller
        /*
         if ($search)
           $dql.=" and u.descripcion like '%$search%' ";
-          
-        $dql .=" order by u.descripcion"; 
-        */
+        */  
+        $dql .=" order by u.id desc"; 
+        
         return $dql;
      
      }
@@ -284,34 +284,48 @@ class MovimientoController extends Controller
 		 
 			$destino = $em->getRepository('BackendAdminBundle:Deposito')->find($destinoId);
 			
-			$origen =  $em->getRepository('BackendAdminBundle:Movimiento')->find($origenId);
+			$origen =  $em->getRepository('BackendAdminBundle:Deposito')->find($origenId);
+			
+			$estado =  $em->getRepository('BackendAdminBundle:EstadoMovimiento')->find(1);
 			
 			$movimiento = new Movimiento();
 			
-			$movimiento->setDepositoDestino($destino);
 			$movimiento->setDepositoOrigen($origen);
+			$movimiento->setDepositoDestino($destino);
 			$movimiento->setDocumento($documento);
+			$movimiento->setEstado($estado);
 			
 			if($observaciones) { $movimiento->setObservaciones(); }
 			
-			foreach($articulos as $art){
-				
-				$articulo = $em->getRepository('BackendAdminBundle:Articulo')->findByImei($art);	
-				$movimiento->addArticulos($articulo);
-			
-			}
-			
-			$em->persist($movimiento);
-            $em->flush();
-            
-            $data["resultado"] = true;
+			if(is_array($articulos)){
 						
+				foreach($articulos as $imei){
+					
+					$dql="SELECT u FROM BackendAdminBundle:Articulo u where u.imei = '$imei'";
+					$articulo = $em->createQuery($dql)->getResult(); 	
+					$movimiento->addArticulo($articulo[0]);			
+				}
+			
+				$em->persist($movimiento);
+				$em->flush();
+							
+				$data["resultado"] = true;
+			
+			}else{
+				
+				$data["resultado"] = false;
+			}
+            						
 			$response = new Response(json_encode($data));
 			$response->headers->set('Content-Type', 'application/json');
 			
-			return $response;
-		 					 
+			return $response;		 					 
 	} 
+	
+	/**
+	 *   Verifica si el imei ingresado corresponde a un equipo
+	 * 
+	 */
 	
 	public function toValidateImeiAction(Request $request){
 		 
@@ -333,7 +347,7 @@ class MovimientoController extends Controller
 			}
 			*/
 			
-			$data["resultado"] = $true;
+			$data["resultado"] = true;
 			$data["imei"] = $imei;			
 			$response = new Response(json_encode($data));
 			$response->headers->set('Content-Type', 'application/json');
@@ -342,6 +356,135 @@ class MovimientoController extends Controller
 		 					 
 	} 
 	
+	/**
+	 *  Acepta movimiento de equipos
+	 * 
+	 */ 
+	
+	
+	public function toAceptadoAction($id){
+		
+		if ( $this->get('security.context')->isGranted('ROLE_MODORDENING')) { 
+        
+            $em = $this->getDoctrine()->getManager();
+            $entity = $em->getRepository('BackendAdminBundle:Movimiento')->find($id);
+
+            if (!$entity) {
+                $this->get('session')->getFlashBag()->add('error' , 'No se ha encontrado ela movimiento.');
+             
+            }
+           else{
+            
+            $estado = $em->getRepository('BackendAdminBundle:EstadoMovimiento')->find(2);
+            
+            $entity->setEstado($estado); //Aceptada
+            $entity->setModifiedAt(new \DateTime('now'));
+            $em->persist($entity);
+            $em->flush();
+            $this->get('session')->getFlashBag()->add('success' , 'Se ha aceptado el movimiento.');
+            
+            }        
+
+        return $this->redirect($this->generateUrl('movimiento'));
+      }
+      else
+       throw new AccessDeniedException();					
+	}
+	
+	/**
+	 * Rechazar movimiento de equipos
+	 * 
+	 */ 
+	
+	public function toRechazadoAction($id){
+		
+		if ( $this->get('security.context')->isGranted('ROLE_DELORDENING')) { 
+        
+            $em = $this->getDoctrine()->getManager();
+            $entity = $em->getRepository('BackendAdminBundle:Movimiento')->find($id);
+
+            if (!$entity) {
+                $this->get('session')->getFlashBag()->add('error' , 'No se ha encontrado el movimiento.');
+             
+            }
+           else{
+            
+            $estado = $em->getRepository('BackendAdminBundle:EstadoMovimiento')->find(3);
+            
+            $entity->setEstado($estado); //Rechazado
+            $entity->setModifiedAt(new \DateTime('now'));
+            $em->persist($entity);
+            $em->flush();
+            $this->get('session')->getFlashBag()->add('success' , 'Se ha rechazado el movimiento.');
+            
+            }        
+
+        return $this->redirect($this->generateUrl('movimiento'));
+      }
+      else
+       throw new AccessDeniedException();					
+	}
+	
+		
+	/**
+	 *  Show detail of movimiento
+	 * 
+	 */ 
+	
+	public function detailAction($id){
+	   
+       if ( $this->get('security.context')->isGranted('ROLE_MODORDENING')) { 
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('BackendAdminBundle:Movimiento')->find($id);
+
+        if (!$entity) {
+            
+             $this->get('session')->getFlashBag()->add('error' , 'No se ha encontrado el movimiento.');
+             return $this->redirect($this->generateUrl('movimiento'));
+        }
+        
+        return $this->render('BackendAdminBundle:Movimiento:detail.html.twig', array(
+            'entity'      => $entity                       
+        ));
+      }
+      else
+         throw new AccessDeniedException();  
+   
+   }  
+	
+    /**
+     * Generate pdf file of movimiento
+     *
+     */
+     
+   public function printAction(Request $request, $id)
+   {
+    $em = $this->getDoctrine()->getManager();
+      $entity = $em->getRepository('BackendAdminBundle:Movimiento')->find($id);
+
+      if (!$entity) {
+          $this->get('session')->getFlashBag()->add('error' , 'No se ha encontrado el movimiento.');
+          return $this->redirect($this->generateUrl('ordenIngreso' ));
+      }
+      else{
+        require_once($this->get('kernel')->getRootDir().'/config/dompdf_config.inc.php');
+
+        $dompdf = new \DOMPDF();
+        $html= $this->renderView('BackendAdminBundle:Movimiento:recibo_orden.html.twig',
+          array('entity'=>$entity)
+        );
+        $dompdf->load_html($html);
+        $dompdf->render();
+        $fileName="recibo_movimiento_parte_".$id.".pdf";
+        $response= new Response($dompdf->output(), 200, array(
+        	'Content-Type' => 'application/pdf; charset=utf-8'
+        ));
+        $response->headers->set('Content-Disposition', 'attachment;filename='.$fileName);
+        return $response;
+      }
+   
+   } 
    
     
      public function exportarAction(Request $request)

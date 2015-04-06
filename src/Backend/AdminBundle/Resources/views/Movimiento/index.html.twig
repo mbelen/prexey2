@@ -40,37 +40,52 @@
      <th>Documento</th>
     <th>Deposito Origen</th>
     <th>Deposito Destino</th>
+    <th>Estado</th>
     <th>Observaciones</th>
-    <th>Detalle</th>
-    <th style="width: 36px;">Acciones</th>
+    <th style="width: 86px;">Acciones</th>
     </tr>
     </thead>
     <tbody>
-     {% for orden in pagination %}
+     {% for movimiento in pagination %}
     
      <tr>
-                <td>{{ orden.createdAt |date('d-m-Y ') }}</td>
-                <td>{{ orden.tipo.name }}</td>
-                <td>{% if articulo.isDisponible %}
-                    
-                    <span class="label label-success">Disponible</span>
-                   
-                  {% else %}
-                     <span class="label label-important">No Disponible</span> 
-                     
-                  {% endif%}</td>
-                <td>{{ articulo.descripcion}}</td>
-                <td>{{ articulo.observacion}}</td>
-                <td>
-                {% if is_granted("ROLE_MODARTICULO") %}
-                <a href="{{ path('ordenIngreso_edit', { 'id': ordenIngreso.id }) }}"><i class="icon-pencil"></i></a>
+          <td>{{ movimiento.createdAt |date('d-m-Y ') }}</td>
+          <td>{{ movimiento.documento }}</td>
+          <td>{{ movimiento.depositoOrigen.getNombre }}</td>
+          <td>{{ movimiento.depositoDestino.getNombre }}</td>
+          <td>
+			  {% if movimiento.estado.id == 1 %}                    
+                    <span class="label label-warning">{{ movimiento.estado.name }}</span>                    
+              {% endif %}                   
+			  {% if movimiento.estado.id == 2 %}                                 
+					<span class="label label-success">{{ movimiento.estado.name }}</span>					
+			  {% endif %}				  
+			  {% if movimiento.estado.id == 3 %}                                    
+					<span class="label label-important">{{ movimiento.estado.name }}</span>					
+			  {% endif %}  	
+          </td>
+          <td>{{ movimiento.observaciones }}</td> 
+          <td>
+              {% if is_granted("ROLE_MODORDENING") %}
+                <a href="{{ path('movimiento_edit', { 'id': movimiento.id }) }}"><i class="icon-pencil"></i></a>
+              {% endif %}
+              {% if is_granted("ROLE_MODORDENING") %}
+					{% if movimiento.estado.id == 1 %}
+					<a href="{{ path('movimientoParte_toaceptado', { 'id': movimiento.id }) }}"><i class="icon-ok"></i></a>
+					{% endif %}
+                {% endif %}                
+                {% if is_granted("ROLE_MODORDENING") %}
+					{% if movimiento.estado.id != 2 and movimiento.estado.id != 3  %}
+						<a href="{{ path('movimientoParte_torechazado', { 'id': movimiento.id }) }}"><i class="icon-remove"></i></a>
+                	{% endif %}
                 {% endif %}
-                 {% if is_granted("ROLE_DELARTICULO") %}
-                
-                <a href="#myModal" role="button" class="confirm-delete" data-toggle="modal" data-id={{ ordenIngreso.id }} ><i class="icon-remove"></i></a>
-                
-                 {% endif %}
-                </td>
+                {% if is_granted("ROLE_MODORDENING") %}
+                		<a href="{{ path('movimiento_detail',{ 'id': movimiento.id }) }}"><i class="icon-eye-open"></i></a>
+				{% endif %}
+				{% if is_granted("ROLE_MODORDENING") %}
+				<a href="{{ path('movimiento_print', { 'id': movimiento.id }) }}"><i class="icon-print"></i></a>
+                {% endif %}
+           </td>
     </tr>
     
     {% endfor %}
@@ -90,11 +105,11 @@
       <h3 id="myModalLabel">Confirmar Borrado</h3>
      </div>
      <div class="modal-body">
-       <p class="error-text">Esta seguro que desea borrar los datos del artículo?</p>
+       <p class="error-text">Esta seguro que desea borrar los datos del movimiento?</p>
      </div>
      <div class="modal-footer">
       <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
-      <button class="btn btn-danger " data-id="0"  data-url="{{ path('articulo_delete', { 'id': 'id' }) }}">Borrar</button>
+      <button class="btn btn-danger " data-id="0"  data-url="{{ path('movimiento_delete', { 'id': 'id' }) }}">Borrar</button>
      </div>
     </div>
     

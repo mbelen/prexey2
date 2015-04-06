@@ -1,0 +1,94 @@
+{% extends '::backend.html.twig' %}
+ {% block stylesheets %}
+    {{ parent() }}
+     {% stylesheets '@BackendAdminBundle/Resources/public/css/ingresos.css' %}
+     <link rel="stylesheet" href="{{ asset_url }}">
+    {% endstylesheets %}
+
+{% endblock %}
+{% block container -%}
+<div class="well">    
+    <h4>Detalle de movimiento de Equipos n°: {{ entity.id }} </h4>
+
+<div class="control-group">
+  <label>Fecha de creación: 
+  {{ entity.createdAt |date('d-m-Y ') }}</label>
+</div>
+
+<div class="control-group">
+  <label>Deposito origen : 
+  {{ entity.depositoOrigen.getNombre }}</label>
+</div>
+
+<div class="control-group">
+  <label>Deposito Destino : 
+  {{ entity.depositoDestino.getNombre }}</label>
+</div>
+
+<div class="control-group">
+  <label>Documento: 
+  {{ entity.getDocumento }}</label>
+</div>
+
+<div class="control-group">
+  <label>Observaciones: 
+  {{ entity.getObservaciones }}</label>
+</div>
+
+<div class="control-group">
+Estado: 
+{% if entity.estado.id == 1 %}                    
+   <span class="label label-warning">{{ entity.estado.name }}</span>                    
+{% endif %}                   
+{% if entity.estado.id == 2 %}                                 
+   <span class="label label-success">{{ entity.estado.name }}</span>					
+{% endif %}				  
+{% if entity.estado.id == 3 %}                                    
+   <span class="label label-important">{{ entity.estado.name }}</span>					
+{% endif %}  
+<br/>	  
+{% if entity.estado.getId == 2 or  entity.estado.getId == 3 %}		  
+Fecha aceptada/rechazada: {{ entity.getModifiedAt |date('d-m-Y ') }}		  
+{% endif %}	
+</div>
+
+</div>
+
+<div class="well">
+    <table class="table">
+    <thead>
+    <tr>
+    <th>Imei</th>
+    <th>Marca</th>
+    <th>Nombre fabricante</th>
+    <th>Nombre interno</th>
+    </tr>
+    </thead>
+    <tbody>
+     {% for articulo in entity.getArticulos() %}    
+     <tr>
+                <td>{{ articulo.getImei() }}</td>
+                <td>{{ articulo.getMarca().getName() }}</td>
+                <td>{{ articulo.getModelo().getName() }}</td>
+                <td>{{ articulo.getModelo().getNameManufacture() }}</td>                                
+     </tr>   
+     {% endfor %}        
+     </tbody>
+     </table>
+</div>	
+{% if entity.estado.id == 1 %}  	
+     <button type="button" class="btn btn-inverse"  data-url="{{ path('movimiento_toaceptado',{ 'id': entity.id }) }}" ><i class="icon-ok icon-white"></i>Aceptar</button>	
+	 <button type="button" class="btn btn-danger"  data-url="{{ path('movimiento_torechazado',{ 'id': entity.id })}}><i class="icon-remove icon-white"></i>Rechazar</button>
+{% endif %}
+	 <button type="button" class="btn btn-inverse" data-url="{{ path('movimiento') }}"><i class="icon-chevron-left icon-white"></i>Volver</button>
+   
+   
+   
+{% endblock %}
+{% block javascripts %}
+  {{ parent() }}
+
+  {% javascripts '@BackendAdminBundle/Resources/public/js/procesa.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+  {% endjavascripts %}
+{% endblock %}    

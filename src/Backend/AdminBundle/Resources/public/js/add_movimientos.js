@@ -46,53 +46,22 @@ $('.btn_agregar').click(function(){
 	
 	}else{
 		
-			var path = $(this).data('url');	 
-			console.log(path);
-			
-			var parametros = { "imei" : articulo };
-			
-			$.ajax({
-					dataType: 'json',
-					data:  parametros,
-					url:   path,
-					type:  'post',
-					})
-					.done(function (data) {
-						
-						console.log(data.resultado);
-																
-						if(!data.resultado){				  					
-						  
-							console.log("no existe");				
-							alert("El imei ingresado no corresponde a ningun equipo ingresado");	
-						
-						}else{			
-							console.log(data.imei);
+			if(articulos.indexOf(articulo) == -1){ 
 							
-							if(articulos.indexOf(articulo) == -1){ 
+			   articulos.push(articulo);
 							
-								articulos.push(articulo);
+			   console.log(articulos);
 							
-								console.log(articulos);
+			   j++;														
+			   
+			   agregarOtro();
 							
-								j++;
+			}else{
 								
-								console.log(j);
-							
-								agregarOtro();
-							
-							}else{
-								
-								alert("Ese articulo ya ha sido cargado");	
-							}
-						}
-					})
-					.always(function(){					
-							
-						//$("#agregar").hide();
-						
-				});	
-	}	
+				alert("Ese articulo ya ha sido cargado");	
+			}
+	 }
+	
 });
 
 $('.btn_eliminar').click(function(){
@@ -158,7 +127,7 @@ $('#crear').click(function(){
 					"articulos": articulos 
 	 };
 	
-	 	  
+	 console.log(parametros);	  
 		  $.ajax({
 					dataType: 'json',
 					data:  parametros,

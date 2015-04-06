@@ -23,6 +23,22 @@ movimiento_update:
 movimiento_toprocesado:
     pattern:  /toprocesado
     defaults: { _controller: "BackendAdminBundle:Movimiento:toProcesado" }
+    
+movimiento_toaceptado:
+    pattern:  /{id}/toaceptado
+    defaults: { _controller: "BackendAdminBundle:Movimiento:toAceptado" }    
+
+movimiento_torechazado:
+    pattern:  /{id}/torechazado
+    defaults: { _controller: "BackendAdminBundle:Movimiento:toRechazado" }    
+
+movimiento_print:
+    pattern:  /{id}/print
+    defaults: { _controller: "BackendAdminBundle:Movimiento:print" }
+
+movimiento_detail:
+    pattern:  /{id}/detail
+    defaults: { _controller: "BackendAdminBundle:Movimiento:detail" }
    
 movimiento_tovalidateimei:
     pattern:  /tovalidateimei
